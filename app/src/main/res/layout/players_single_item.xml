@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardElevation="5dp"
+    android:layout_margin="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/waiting_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/accent"
+        android:elevation="@dimen/activity_horizontal_margin"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:text="Waiting for other players...\nYou can start the game to play with Android."
+        android:textAlignment="center"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/number_circle"
+        android:layout_margin="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/circleImageView2" />
+
+
+    <TextView
+        android:id="@+id/exp_players"
+        android:layout_width="30dp"
+        android:gravity="center"
+        android:textColor="#fff"
+        android:textAlignment="center"
+        android:layout_height="30dp"
+        android:text="12"
+        android:background="@drawable/number_circle"
+        app:layout_constraintEnd_toEndOf="@+id/circleImageView2"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/circleImageView2"
+        android:layout_marginBottom="0dp" />
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/circleImageView2"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/user_name_players"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+      android:textSize="@dimen/activity_horizontal_margin"
+            android:text="Jhony Jester"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/player_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Im the world classified player and Undefeated."
+          />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
