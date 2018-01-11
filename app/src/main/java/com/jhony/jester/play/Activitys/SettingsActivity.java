@@ -1,5 +1,6 @@
 package com.jhony.jester.play.Activitys;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import static com.jhony.jester.play.Utils.DataSingleton.mUserName;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    ImageButton back;
+    ImageButton back, about;
     CircleImageView mUserImage;
     TextView mUserNameSettings, mMusic, mSound, mRotation, mVibration;
     Button signOut;
@@ -31,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        about = findViewById(R.id.about_sett);
         back = findViewById(R.id.back_btn_sett);
         mUserImage = findViewById(R.id.user_image_sett);
         mUserNameSettings = findViewById(R.id.user_name_sett);
@@ -41,6 +43,13 @@ public class SettingsActivity extends AppCompatActivity {
         signOut = findViewById(R.id.sign_out_sett);
 
         mUserNameSettings.setText(mUserName);
+
+        about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SettingsActivity.this, AboutActivity.class));
+            }
+        });
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,11 +78,11 @@ public class SettingsActivity extends AppCompatActivity {
                 if (DataSingleton.isMusic) {
                     DataSingleton.isMusic = false;
                     mMusic.setTextColor(getResources().getColor(R.color.gray));
-                    mMusic.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_no_sound), null);
+                    mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_music),null, null,  null);
                 } else {
                     DataSingleton.isMusic = true;
                     mMusic.setTextColor(getResources().getColor(R.color.primary));
-                    mMusic.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_music_note_black_24dp), null);
+                    mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_music_note_black_24dp),null, null,  null);
                 }
             }
         });
@@ -107,11 +116,11 @@ public class SettingsActivity extends AppCompatActivity {
                 if (DataSingleton.isSound) {
                     DataSingleton.isSound = false;
                     mSound.setTextColor(getResources().getColor(R.color.gray));
-                    mSound.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_no_sound), null);
+                    mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_sound),null, null,  null);
                 } else {
                     DataSingleton.isSound = true;
                     mSound.setTextColor(getResources().getColor(R.color.primary));
-                    mSound.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_sound), null);
+                    mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_sound),null, null,  null);
                 }
             }
         });
@@ -122,7 +131,7 @@ public class SettingsActivity extends AppCompatActivity {
                 if (DataSingleton.isVibration) {
                     DataSingleton.isVibration = false;
                     mVibration.setTextColor(getResources().getColor(R.color.gray));
-                    mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_sound), null, null, null);
+                    mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_vibration), null, null, null);
 
                 } else {
                     DataSingleton.isVibration = true;

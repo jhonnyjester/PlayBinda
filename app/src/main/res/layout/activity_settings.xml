@@ -63,10 +63,11 @@
 
 
             <View
-                android:background="@color/gray"
+                android:background="#212121"
+                android:alpha="0.8"
                 android:id="@+id/separator"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="0.7dp"
                 android:layout_below="@+id/user_name_sett"
                 android:layout_margin="10dp" />
 
@@ -155,5 +156,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:background="@drawable/md_transparent"
+        android:id="@+id/about_sett"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_info_outline_black_24dp" />
 
 </android.support.constraint.ConstraintLayout>

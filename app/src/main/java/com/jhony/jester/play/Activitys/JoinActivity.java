@@ -55,6 +55,7 @@ public class JoinActivity extends AppCompatActivity {
                         return;
                     }
                 startActivity(joinIntent);
+                finish();
             }
         });
 

@@ -155,10 +155,12 @@ public class WaitingActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(WaitingActivity.this, SplashActivity.class));
     }
 }
 

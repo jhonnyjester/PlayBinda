@@ -91,8 +91,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                             if (!DataSingleton.isTicked.get(position)) {
                                 DataSingleton.isTicked.set(position, true);
 //                                holder.mGridContainer.setCardBackgroundColor(context.getResources().getColor(R.color.green));
-                                holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.name_rectangle));
-                                holder.rowTv.setTextColor(context.getResources().getColor(R.color.red));
+                                holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.gradient_green));
+                                holder.rowTv.setTextColor(context.getResources().getColor(R.color.white));
 
                                 ((GameActivity) context).cardClciked(position);
                             }
