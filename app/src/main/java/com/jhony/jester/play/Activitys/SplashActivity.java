@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.ContextThemeWrapper;
 import android.text.Layout;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -22,7 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jhony.jester.play.Adapters.CustomDialog;
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
 
@@ -46,6 +49,7 @@ public class SplashActivity extends AppCompatActivity {
     CircleImageView userImage, logo;
     Animation up, down, left, right;
     Intent intent;
+    MaterialDialog.Builder dialog;
     public static final String TAG = "Splash Activity";
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -70,16 +74,17 @@ public class SplashActivity extends AppCompatActivity {
 //        right = new AnimationUtils().loadAnimation(getApplicationContext(), R.anim.right);
 //        left = new AnimationUtils().loadAnimation(getApplicationContext(), R.anim.left);
 
-        userName.setText(mUserName);
-        userImage.setImageResource(R.drawable.vector);
-//        logo.setImageResource();
-        currentProgress.setText(String.valueOf(mCurrentProgress));
-        levelUpTarget.setText(String.valueOf(mLevelUpTarget));
-        progressBar.setProgress(75);
-        progressBar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
-        userLevel.setText(String.valueOf(mUserLevel));
+       setValues();
 
-        intent = new Intent(getApplicationContext(), ConnectPlayersActivity.class);
+        userName.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                showEditDialog();
+                return true;
+            }
+        });
+
+        intent = new Intent(getApplicationContext(), WaitingActivity.class);
 
         hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +97,7 @@ public class SplashActivity extends AppCompatActivity {
         joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intent.putExtra(WHICH, JOIN);
-                startActivity(intent);
+                startActivity(new Intent(SplashActivity.this, JoinActivity.class));
             }
         });
 
@@ -101,20 +105,51 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+
             }
         });
 
     }
 
-/*    private void openDialog(String which) {
-//         CustomDialog.newInstance(getApplicationContext(), which).show(getSupportFragmentManager(), "hostOrJoin");
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setValues();
+    }
+
+    private void showEditDialog() {
+        dialog = new MaterialDialog.Builder(this);
+        dialog.title("User Name")
+                .titleColor(getResources().getColor(R.color.accent))
+                .input(mUserName, null, true, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                        if (!TextUtils.isEmpty(input)) {
+                            mUserName = input.toString();
+                            userName.setText(input);
+                        }
+                    }
+                }).show();
+    }
+
+    public void setValues(){
+        userName.setText(mUserName);
+        currentProgress.setText(String.valueOf(mCurrentProgress));
+        levelUpTarget.setText(String.valueOf(mLevelUpTarget));
+        progressBar.setProgress(75);
+        progressBar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
+        userLevel.setText(String.valueOf(mUserLevel));
+        userImage.setImageResource(R.drawable.vector);
+//        logo.setImageResource();
+    }
+
+ /*   private void openDialog(String which) {
+         CustomDialog.newInstance(getApplicationContext(), which).show(getSupportFragmentManager(), "hostOrJoin");
         Dialog dialog;
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(hosting.getWidth(), hosting.getHeight());
-//        dialog = new Dialog(new ContextThemeWrapper(this, R.style.DialogSlideAnimation));
-//        dialog.setContentView(R.layout.hosting_layout);
-//        dialog.create();
-//        dialog.show();
-        getWindow().setGravity(Gravity.BOTTOM);
+
+        dialog.create();
+        dialog.show();
+
     }*/
 
    /* private void invertVisibility(String which) {

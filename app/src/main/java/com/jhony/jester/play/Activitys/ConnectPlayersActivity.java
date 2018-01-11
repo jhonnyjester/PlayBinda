@@ -1,111 +1,178 @@
+/*
 package com.jhony.jester.play.Activitys;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.jhony.jester.play.Connections.Client;
+import com.jhony.jester.play.Connections.Server;
 import com.jhony.jester.play.R;
+import com.rafakob.nsdhelper.NsdHelper;
+import com.rafakob.nsdhelper.NsdListener;
+import com.rafakob.nsdhelper.NsdService;
+import com.rafakob.nsdhelper.NsdType;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.ServerSocket;
 
 import static com.jhony.jester.play.Utils.Constants.HOST;
 import static com.jhony.jester.play.Utils.Constants.JOIN;
 import static com.jhony.jester.play.Utils.Constants.WHICH;
 
-public class ConnectPlayersActivity extends AppCompatActivity {
+public class ConnectPlayersActivity extends AppCompatActivity implements NsdListener {
 
     private final IntentFilter intentFilter = new IntentFilter();
     public static final String TAG = "Connect Players";
-    private boolean isWifiP2pEnabled = false;
 
-    WifiP2pManager.Channel channel;
-    WifiP2pManager manager;
-    BroadcastReceiver receiver;
+    Server server;
+    ServerSocket serverSocket;
+    Client clientThread = null;
+    NsdHelper nsdHelper;
+    WifiManager wifiManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, getIntent().getStringExtra(WHICH));
+        nsdHelper = new NsdHelper(this, this);
+        nsdHelper.setAutoResolveEnabled(true);
+        nsdHelper.setDiscoveryTimeout(30);
+        nsdHelper.setLogEnabled(true);
 
+        Log.d(TAG, getIntent().getStringExtra(WHICH));
         switch (getIntent().getStringExtra(WHICH)) {
             case HOST:
+                //     if (isConnected())
                 setContentView(R.layout.hosting_layout);
+                nsdHelper.registerService("OHLONG", NsdType.HTTP);
+                server = new Server(this);
+                //     else myConnector();
                 break;
             case JOIN:
+                //    if (isConnected())
                 setContentView(R.layout.joining_layout);
+
+                nsdHelper.startDiscovery(NsdType.HTTP);
+                //    else myConnector();
                 break;
             default:
                 finish();
         }
 
-        initiateP2P();
-        manager = (WifiP2pManager) getSystemService(WIFI_P2P_SERVICE);
-        channel = manager.initialize(this, getMainLooper(), null);
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
-        intiatePeers();
-        peerConnect();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
-        registerReceiver(receiver, intentFilter);
+        Log.d("onResume", getIntent().getStringExtra(WHICH));
+        switch (getIntent().getStringExtra(WHICH)) {
+            case HOST:
+
+                break;
+            case JOIN:
+
+                break;
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
+        Log.d("onPause", getIntent().getStringExtra(WHICH));
+        switch (getIntent().getStringExtra(WHICH)) {
+            case HOST:
+
+                break;
+            case JOIN:
+
+                break;
+        }
     }
 
-    private void initiateP2P(){
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("onDestroy", getIntent().getStringExtra(WHICH));
+        switch (getIntent().getStringExtra(WHICH)) {
+            case HOST:
+
+                break;
+            case JOIN:
+
+                break;
+        }
     }
 
-    private void intiatePeers(){
-        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
 
+    private boolean isConnected() {
+        boolean isEnabled = false;
+
+        //is Hotspot enabled
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
+        for (Method method : wmMethods) {
+            if (method.getName().equals("isWifiApEnabled")) {
+
+                try {
+                    isEnabled = (boolean) method.invoke(wifi);
+                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
-
-            @Override
-            public void onFailure(int i) {
-
-            }
-        });
+        }
+        //is wifi enabled
+        return true; //isEnabled | wifi.isWifiEnabled();
     }
 
-    private void peerConnect(){
-        WifiP2pDevice device = WiFiDirectBroadcastReceiver.peers.get(0);
-        WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = device.deviceAddress;
-        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
+    private void myConnector() {
+        //Propt the user to switch on either wifi or hotspot
+       */
+/* Dialog dialog = new Dialog(this);
+        dialog.setTitle("Switch on WiFi or Hotspot");
+        dialog.show();*//*
 
-            }
-
-            @Override
-            public void onFailure(int i) {
-
-            }
-        });
     }
 
-    public void setIsWifiEnabled(boolean isEnabled){
-        isWifiP2pEnabled = isEnabled;
+    @Override
+    public void onNsdRegistered(NsdService nsdService) {
+
     }
 
+    @Override
+    public void onNsdDiscoveryFinished() {
 
-}
+    }
+
+    @Override
+    public void onNsdServiceFound(NsdService nsdService) {
+        nsdHelper.resolveService(nsdService);
+    }
+
+    @Override
+    public void onNsdServiceResolved(NsdService nsdService) {
+        clientThread = new Client(
+                "Custer",
+                nsdService.getHostIp(),
+                nsdService.getPort(),
+               */
+/* android.text.format.Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress())*//*
+"");
+        clientThread.start();
+    }
+
+    @Override
+    public void onNsdServiceLost(NsdService nsdService) {
+
+    }
+
+    @Override
+    public void onNsdError(String s, int i, String s1) {
+
+    }
+}*/

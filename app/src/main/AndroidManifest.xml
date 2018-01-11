@@ -2,18 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jhony.jester.play">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:required="true" android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:required="true" android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:required="true" android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.CHANGE_WIFI_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Activitys.GameActivity" />
+        android:theme="@style/FullscreenTheme">
+        <activity
+            android:name=".Activitys.GameActivity"
+            android:theme="@style/FullscreenTheme" />
         <activity android:name=".Activitys.RegistrationActivity" />
         <activity
             android:name=".Activitys.SplashActivity"
@@ -24,8 +32,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activitys.ConnectPlayersActivity" android:theme="@style/FullscreenTheme"/>
-        <activity android:name=".Activitys.SettingsActivity"></activity>
+        <activity android:name=".Activitys.SettingsActivity"
+            android:parentActivityName=".Activitys.SplashActivity"/>
+        <activity
+            android:name=".Activitys.WaitingActivity"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".Activitys.JoinActivity"></activity>
     </application>
 
 </manifest>
