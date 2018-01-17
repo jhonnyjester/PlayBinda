@@ -20,6 +20,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.JOINED;
 import static com.jhony.jester.play.Utils.Constants.WHICH;
+import static com.jhony.jester.play.Utils.DataSingleton.isHost;
 
 public class JoinActivity extends AppCompatActivity {
 

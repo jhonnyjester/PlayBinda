@@ -18,7 +18,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/number_circle"
+        android:src="@drawable/binda_blue_fill"
         app:layout_constraintBottom_toTopOf="@+id/user_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -85,22 +85,20 @@
         android:gravity="center"
         android:text="12"
         android:textAlignment="center"
-        android:textColor="#fff"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
-        app:layout_constraintEnd_toEndOf="@+id/circleImageView"
-        app:layout_constraintRight_toRightOf="@+id/circleImageView" />
+        app:layout_constraintEnd_toEndOf="@+id/circleImageView" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_image"
         android:layout_width="75dp"
         android:layout_height="75dp"
-
+        android:elevation="5dp"
         android:gravity="center"
         android:src="@drawable/number_circle"
         android:textColor="#fff"
-        app:layout_constraintTop_toTopOf="@+id/circleImageView"
         app:layout_constraintStart_toStartOf="@+id/circleImageView"
-        app:layout_constraintLeft_toLeftOf="@+id/circleImageView" />
+        app:layout_constraintTop_toTopOf="@+id/circleImageView" />
 
     <TextView
         android:id="@+id/current_progress_tv"

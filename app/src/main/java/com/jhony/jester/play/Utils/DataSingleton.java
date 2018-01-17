@@ -30,6 +30,10 @@ public class DataSingleton {
 
     public static boolean isMusic = true;
 
+    public static boolean isHost = true;
+
+    public static boolean isVisible = false;
+
     public static String getRotation = Constants.ROTATION;
 
     public static boolean isSound = true;

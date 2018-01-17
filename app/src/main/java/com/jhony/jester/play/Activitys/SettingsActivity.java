@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -17,6 +19,10 @@ import com.jhony.jester.play.Utils.DataSingleton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.jhony.jester.play.Utils.DataSingleton.getRotation;
+import static com.jhony.jester.play.Utils.DataSingleton.isMusic;
+import static com.jhony.jester.play.Utils.DataSingleton.isSound;
+import static com.jhony.jester.play.Utils.DataSingleton.isVibration;
 import static com.jhony.jester.play.Utils.DataSingleton.mUserName;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -25,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
     CircleImageView mUserImage;
     TextView mUserNameSettings, mMusic, mSound, mRotation, mVibration;
     Button signOut;
+    Animation spin;
     MaterialDialog.Builder dialog;
 
     @Override
@@ -42,7 +49,9 @@ public class SettingsActivity extends AppCompatActivity {
         mVibration = findViewById(R.id.vibrate_sett);
         signOut = findViewById(R.id.sign_out_sett);
 
-        mUserNameSettings.setText(mUserName);
+//        spin = AnimationUtils.loadAnimation(this, R.anim.spin);
+
+        initiation();
 
         about.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +87,11 @@ public class SettingsActivity extends AppCompatActivity {
                 if (DataSingleton.isMusic) {
                     DataSingleton.isMusic = false;
                     mMusic.setTextColor(getResources().getColor(R.color.gray));
-                    mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_music),null, null,  null);
+                    mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_music), null, null, null);
                 } else {
                     DataSingleton.isMusic = true;
                     mMusic.setTextColor(getResources().getColor(R.color.primary));
-                    mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_music_note_black_24dp),null, null,  null);
+                    mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_music_note_black_24dp), null, null, null);
                 }
             }
         });
@@ -116,11 +125,11 @@ public class SettingsActivity extends AppCompatActivity {
                 if (DataSingleton.isSound) {
                     DataSingleton.isSound = false;
                     mSound.setTextColor(getResources().getColor(R.color.gray));
-                    mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_sound),null, null,  null);
+                    mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_sound), null, null, null);
                 } else {
                     DataSingleton.isSound = true;
                     mSound.setTextColor(getResources().getColor(R.color.primary));
-                    mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_sound),null, null,  null);
+                    mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_sound), null, null, null);
                 }
             }
         });
@@ -136,7 +145,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } else {
                     DataSingleton.isVibration = true;
                     mVibration.setTextColor(getResources().getColor(R.color.primary));
-                    mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_vibration_black_24dp),null, null,  null);
+                    mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_vibration_black_24dp), null, null, null);
                 }
             }
         });
@@ -149,6 +158,43 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void initiation() {
+        mUserNameSettings.setText(mUserName);
+        if (isMusic) {
+            mMusic.setTextColor(getResources().getColor(R.color.primary));
+            mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_music_note_black_24dp), null, null, null);
+        } else {
+            mMusic.setTextColor(getResources().getColor(R.color.gray));
+            mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_music), null, null, null);
+        }
+
+        if (isSound) {
+            mSound.setTextColor(getResources().getColor(R.color.primary));
+            mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_sound), null, null, null);
+        } else {
+            mSound.setTextColor(getResources().getColor(R.color.gray));
+            mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_sound), null, null, null);
+        }
+        if (isVibration) {
+            mVibration.setTextColor(getResources().getColor(R.color.primary));
+            mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_vibration_black_24dp), null, null, null);
+        } else {
+            mVibration.setTextColor(getResources().getColor(R.color.gray));
+            mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_vibration), null, null, null);
+        }
+        switch (getRotation) {
+            case Constants.ROTATION: mRotation.setText(Constants.ROTATION);
+                mRotation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_screen_rotation_black_24dp), null, null, null);
+                break;
+            case Constants.PORTRAIT:mRotation.setText(Constants.PORTRAIT);
+                mRotation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_portrait_only), null, null, null);
+                break;
+            case Constants.LANDSCAPE:mRotation.setText(Constants.LANDSCAPE);
+                mRotation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_landscape_only), null, null, null);
+                break;
+        }
     }
 
     private void showEditDialog() {

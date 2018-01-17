@@ -45,7 +45,6 @@ android:background="?attr/selectableItemBackground"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/vector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -74,8 +73,8 @@ android:background="?attr/selectableItemBackground"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_not_ready"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/ic_not_ready"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,7 +93,7 @@ android:background="?attr/selectableItemBackground"
             app:layout_constraintStart_toEndOf="@+id/user_image"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/user_name_players"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,7 +103,7 @@ android:background="?attr/selectableItemBackground"
                 android:textStyle="bold" />
 
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/player_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

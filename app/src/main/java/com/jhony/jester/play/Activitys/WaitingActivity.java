@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,8 +23,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.nearby.Nearby;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
+import com.jhony.jester.play.Connections.EverythingNearby;
 import com.jhony.jester.play.R;
+import com.jhony.jester.play.Utils.Constants;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -32,6 +36,8 @@ import static com.jhony.jester.play.Utils.Constants.JOIN;
 import static com.jhony.jester.play.Utils.Constants.JOINED;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
 import static com.jhony.jester.play.Utils.Constants.WHICH;
+import static com.jhony.jester.play.Utils.DataSingleton.isHost;
+import static com.jhony.jester.play.Utils.DataSingleton.isVisible;
 
 public class WaitingActivity extends AppCompatActivity {
 
@@ -42,14 +48,29 @@ public class WaitingActivity extends AppCompatActivity {
     Button mReady;
     RecyclerView mRecycler;
     MyRecyclerAdapter myRecyclerAdapter;
-    Animation slideUp, slideDown;
+    Animation slideUp, slideDown, spin;
+    ConstraintLayout mHostCL, mChatCL;
     boolean isLocked = false, playerStatus = true;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Nearby.getConnectionsClient(getApplicationContext()).stopDiscovery();
+        Nearby.getConnectionsClient(getApplicationContext()).stopAdvertising();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hosting_layout);
 
+        mHostCL = findViewById(R.id.host_set_cl);
+        mChatCL = findViewById(R.id.chat_cl);
         mPassword = findViewById(R.id.pass_et);
         mLock = findViewById(R.id.lock);
         host_set = findViewById(R.id.host_settings);
@@ -59,6 +80,7 @@ public class WaitingActivity extends AppCompatActivity {
 
         slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+        spin = AnimationUtils.loadAnimation(this, R.anim.spin);
 
         myRecyclerAdapter = new MyRecyclerAdapter(this, RECYCLER);
         mRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -67,11 +89,13 @@ public class WaitingActivity extends AppCompatActivity {
 
         switch (getIntent().getStringExtra(WHICH)) {
             case HOST:
+            mHostCL.setVisibility(View.GONE);
+
                 break;
 
             case JOINED:
-                mLock.setVisibility(View.GONE);
-                host_set.setVisibility(View.GONE);
+                host_set.setVisibility(View.INVISIBLE);
+                mHostCL.setVisibility(View.GONE);
                 listViewCompat.setClickable(false);
                 mReady.setText("YES! LET'S GO!");
 
@@ -83,7 +107,17 @@ public class WaitingActivity extends AppCompatActivity {
         host_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (isVisible){
+                    host_set.startAnimation(spin);
+                    isVisible = false;
+                    mHostCL.setVisibility(View.GONE);
+                    mChatCL.setVisibility(View.VISIBLE);
+                } else {
+                    host_set.startAnimation(spin);
+                    isVisible = true;
+                    mHostCL.setVisibility(View.VISIBLE);
+                    mChatCL.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -157,10 +191,5 @@ public class WaitingActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(WaitingActivity.this, SplashActivity.class));
-    }
 }
 

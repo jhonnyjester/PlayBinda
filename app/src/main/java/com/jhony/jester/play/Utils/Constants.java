@@ -13,8 +13,8 @@ public class Constants {
     public static final String WHAT = "what";
     public static final String GRID = "grid";
     public static final String RECYCLER = "recycler";
-    public static final String ROTATION = "rotation";
-    public static final String PORTRAIT = "portrait";
-    public static final String LANDSCAPE = "landscape";
+    public static final String ROTATION = "Rotation";
+    public static final String PORTRAIT = "Portrait";
+    public static final String LANDSCAPE = "Landscape";
     public static int PORT = 9090;
 }

@@ -67,12 +67,13 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <ImageButton
+        android:contentDescription="ib"
         android:id="@+id/left_arrow"
         android:layout_width="48dp"
         android:layout_height="200dp"
         android:layout_marginStart="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_prev"
+        app:srcCompat="@drawable/ic_prev"
         app:layout_constraintBottom_toBottomOf="@+id/hosts_image"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -84,6 +85,6 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="@+id/hosts_image"
         app:layout_constraintRight_toRightOf="parent"
-       android:src="@drawable/ic_next" />
+        app:srcCompat="@drawable/ic_next" />
 
 </android.support.constraint.ConstraintLayout>

@@ -72,7 +72,7 @@ public class GameActivity extends AppCompatActivity {
             columnCount[i] = 0;
         }
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < (gameSize * gameSize); i++) {
             numbers.add(i + 1);
             isTicked.add(false);
         }
@@ -80,7 +80,7 @@ public class GameActivity extends AppCompatActivity {
         Collections.shuffle(numbers);
 
         myRecyclerAdapter = new MyRecyclerAdapter(this, GRID);
-        mRecycler.setLayoutManager(new GridLayoutManager(getApplicationContext(), 5));
+        mRecycler.setLayoutManager(new GridLayoutManager(getApplicationContext(), gameSize));
         mRecycler.setItemAnimator(new DefaultItemAnimator());
         mRecycler.setAdapter(myRecyclerAdapter);
 
@@ -134,7 +134,7 @@ public class GameActivity extends AppCompatActivity {
         }
         bindaCount++;
 
-        if (bindaCount == gameSize) {
+        if (bindaCount == 5) {
             bindaCount = 0;
             Toast.makeText(this, "YOU WON", Toast.LENGTH_SHORT).show();
             didWin = true;

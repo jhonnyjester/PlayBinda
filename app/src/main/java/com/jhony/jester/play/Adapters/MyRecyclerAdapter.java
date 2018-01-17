@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.jhony.jester.play.Activitys.GameActivity;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
@@ -22,8 +23,11 @@ import java.util.Random;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.GRID;
+import static com.jhony.jester.play.Utils.Constants.HOST;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
 import static com.jhony.jester.play.Utils.Constants.WHAT;
+import static com.jhony.jester.play.Utils.DataSingleton.gameSize;
+import static com.jhony.jester.play.Utils.DataSingleton.isHost;
 
 /**
  * Created by JAR on 06-01-2018.
@@ -61,8 +65,15 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         switch (what) {
             case RECYCLER:
+                //use glide to set the player image
+                // set description and name
+                Glide.with(context).load(R.drawable.vector).into(holder.mUserImage);
+
+
+
                 if (position == getItemCount() - 1) {
-                    holder.mWaiting.setVisibility(View.VISIBLE);
+                    if (isHost)
+                        holder.mWaiting.setVisibility(View.VISIBLE);
                 } else holder.mWaiting.setVisibility(View.GONE);
                 if (position % 2 == 0) {
                     holder.mPlayerStatus.setImageResource(R.drawable.ic_ready);
@@ -87,7 +98,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
                     @Override
                     public void onClick(View view) {
-                        if (!DataSingleton.didWin  && DataSingleton.myTurn)
+                        if (!DataSingleton.didWin && DataSingleton.myTurn)
                             if (!DataSingleton.isTicked.get(position)) {
                                 DataSingleton.isTicked.set(position, true);
 //                                holder.mGridContainer.setCardBackgroundColor(context.getResources().getColor(R.color.green));
@@ -108,7 +119,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
             case RECYCLER:
                 return 10 + 1;
             case GRID:
-                return 25;
+                return gameSize * gameSize;
             default:
                 return 3;
         }

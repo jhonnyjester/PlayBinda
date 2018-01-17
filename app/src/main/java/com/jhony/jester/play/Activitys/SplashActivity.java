@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import com.jhony.jester.play.Connections.EverythingNearby;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
 
@@ -34,6 +35,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.jhony.jester.play.Utils.Constants.HOST;
 import static com.jhony.jester.play.Utils.Constants.JOIN;
 import static com.jhony.jester.play.Utils.Constants.WHICH;
+import static com.jhony.jester.play.Utils.DataSingleton.isHost;
 import static com.jhony.jester.play.Utils.DataSingleton.mCurrentProgress;
 import static com.jhony.jester.play.Utils.DataSingleton.mLevelUpTarget;
 import static com.jhony.jester.play.Utils.DataSingleton.mUserImage;
@@ -46,8 +48,9 @@ public class SplashActivity extends AppCompatActivity {
     TextView userName, currentProgress, levelUpTarget, hostGame, joinGame, userLevel;
     ProgressBar progressBar;
     ImageButton settings;
+    EverythingNearby everythingNearby;
     CircleImageView userImage, logo;
-    Animation up, down, left, right;
+    Animation up, down, left, right, spin;
     Intent intent;
     MaterialDialog.Builder dialog;
     public static final String TAG = "Splash Activity";
@@ -74,6 +77,8 @@ public class SplashActivity extends AppCompatActivity {
 //        right = new AnimationUtils().loadAnimation(getApplicationContext(), R.anim.right);
 //        left = new AnimationUtils().loadAnimation(getApplicationContext(), R.anim.left);
 
+//        spin = AnimationUtils.loadAnimation(this, R.anim.spin);
+
        setValues();
 
         userName.setOnLongClickListener(new View.OnLongClickListener() {
@@ -90,6 +95,8 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 intent.putExtra(WHICH, HOST);
+                isHost = true;
+                everythingNearby = new EverythingNearby(getApplicationContext(), Constants.HOST);
                 startActivity(intent);
             }
         });
@@ -97,6 +104,8 @@ public class SplashActivity extends AppCompatActivity {
         joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isHost = false;
+                everythingNearby = new EverythingNearby(getApplicationContext(), Constants.JOIN);
                 startActivity(new Intent(SplashActivity.this, JoinActivity.class));
             }
         });
