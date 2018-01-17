@@ -130,7 +130,9 @@ public class WaitingActivity extends AppCompatActivity {
                         startActivity(new Intent(WaitingActivity.this, GameActivity.class));
                         break;
                     case JOINED:
-                        if (playerStatus) {
+                        startActivity(new Intent(WaitingActivity.this, GameActivity.class));
+
+                       /* if (playerStatus) {
                             playerStatus = false;
                             mReady.setText("Wait! I'M not Ready");
                             mReady.setBackgroundColor(getResources().getColor(R.color.gray));
@@ -138,7 +140,7 @@ public class WaitingActivity extends AppCompatActivity {
                             playerStatus = true;
                             mReady.setText("Yes! Let's Go!");
                             mReady.setBackground(getResources().getDrawable(R.drawable.button_background));
-                        }
+                        }*/
                         break;
                 }
             }

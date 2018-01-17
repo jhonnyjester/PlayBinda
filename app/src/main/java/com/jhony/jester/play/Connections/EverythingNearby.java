@@ -3,6 +3,7 @@ package com.jhony.jester.play.Connections;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
@@ -78,6 +79,7 @@ public class EverythingNearby {
             switch (connectionResolution.getStatus().getStatusCode()) {
                 case ConnectionsStatusCodes.STATUS_OK:
                     Log.d("onConnectionResult", "CONNECTED");
+                    DataSingleton.endPoint = s;
                     sendPayload(s, Payload.fromBytes(payloadString.getBytes()));
                     Nearby.getConnectionsClient(context).stopAdvertising();
                     Nearby.getConnectionsClient(context).stopDiscovery();
@@ -109,6 +111,7 @@ public class EverythingNearby {
             Log.d("onPayLoadReceived", "RECEIVED");
             String stringsodasarbath = new String(payload.asBytes());
             Log.d("Payload Received", stringsodasarbath);
+            Toast.makeText(context, "Payload recieved: " + stringsodasarbath, Toast.LENGTH_SHORT).show();
         }
 
         @Override

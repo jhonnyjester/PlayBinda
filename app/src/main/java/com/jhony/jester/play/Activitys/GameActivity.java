@@ -16,6 +16,8 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
@@ -28,11 +30,12 @@ import java.util.Random;
 import static com.jhony.jester.play.Utils.Constants.GRID;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
 import static com.jhony.jester.play.Utils.DataSingleton.didWin;
+import static com.jhony.jester.play.Utils.DataSingleton.endPoint;
 import static com.jhony.jester.play.Utils.DataSingleton.gameSize;
 import static com.jhony.jester.play.Utils.DataSingleton.isTicked;
 import static com.jhony.jester.play.Utils.DataSingleton.numbers;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements BindaItemClickListener {
 
     MyRecyclerAdapter myRecyclerAdapter;
     RecyclerView mRecycler;
@@ -83,6 +86,7 @@ public class GameActivity extends AppCompatActivity {
         mRecycler.setLayoutManager(new GridLayoutManager(getApplicationContext(), gameSize));
         mRecycler.setItemAnimator(new DefaultItemAnimator());
         mRecycler.setAdapter(myRecyclerAdapter);
+        myRecyclerAdapter.setListener(this);
 
     }
 
@@ -145,5 +149,11 @@ public class GameActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        cardClciked(position);
+        Nearby.getConnectionsClient(getApplicationContext()).sendPayload(endPoint, Payload.fromBytes(String.valueOf(numbers.get(position)).getBytes()));
     }
 }

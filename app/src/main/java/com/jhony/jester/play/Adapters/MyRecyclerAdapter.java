@@ -1,6 +1,5 @@
 package com.jhony.jester.play.Adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,23 +10,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.connection.Payload;
+import com.jhony.jester.play.Activitys.BindaItemClickListener;
 import com.jhony.jester.play.Activitys.GameActivity;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Random;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.GRID;
-import static com.jhony.jester.play.Utils.Constants.HOST;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
-import static com.jhony.jester.play.Utils.Constants.WHAT;
+import static com.jhony.jester.play.Utils.DataSingleton.endPoint;
 import static com.jhony.jester.play.Utils.DataSingleton.gameSize;
 import static com.jhony.jester.play.Utils.DataSingleton.isHost;
+import static com.jhony.jester.play.Utils.DataSingleton.numbers;
 
 /**
  * Created by JAR on 06-01-2018.
@@ -37,8 +34,9 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
 
     Context context;
-    String what;
+    String what, payload;
     View view;
+    private BindaItemClickListener bindaItemClickListener;
 
     public MyRecyclerAdapter(Context context, String what) {
         this.context = context;
@@ -68,9 +66,6 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                 //use glide to set the player image
                 // set description and name
                 Glide.with(context).load(R.drawable.vector).into(holder.mUserImage);
-
-
-
                 if (position == getItemCount() - 1) {
                     if (isHost)
                         holder.mWaiting.setVisibility(View.VISIBLE);
@@ -104,13 +99,17 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 //                                holder.mGridContainer.setCardBackgroundColor(context.getResources().getColor(R.color.green));
                                 holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.gradient_green));
                                 holder.rowTv.setTextColor(context.getResources().getColor(R.color.white));
-
-                                ((GameActivity) context).cardClciked(position);
+                                payload = String.valueOf(numbers.get(position));
+                                bindaItemClickListener.onItemClick(position);
                             }
                     }
                 });
                 break;
         }
+    }
+
+    public void setListener(BindaItemClickListener bindaItemClickListener) {
+        this.bindaItemClickListener = bindaItemClickListener;
     }
 
     @Override

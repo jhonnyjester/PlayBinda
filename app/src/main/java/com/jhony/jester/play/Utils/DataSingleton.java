@@ -24,6 +24,8 @@ public class DataSingleton {
 
     public static int gameSize = 5;
 
+    public static String endPoint;
+
     public static boolean didWin = false;
 
     public static boolean myTurn = true;
@@ -39,10 +41,6 @@ public class DataSingleton {
     public static boolean isSound = true;
 
     public static boolean isVibration = true;
-
-    public static List<WifiP2pDevice> peers = new ArrayList<>();
-
-    public static List<WifiP2pDevice> refreshedPeers;
 
     public static ArrayList<Integer> numbers = new ArrayList<>();
 
