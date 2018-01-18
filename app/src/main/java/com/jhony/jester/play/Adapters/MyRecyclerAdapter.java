@@ -10,10 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.Payload;
-import com.jhony.jester.play.Activitys.BindaItemClickListener;
-import com.jhony.jester.play.Activitys.GameActivity;
+import com.jhony.jester.play.Interfaces.BindaItemClickListener;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
 
@@ -21,10 +18,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.GRID;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
-import static com.jhony.jester.play.Utils.DataSingleton.endPoint;
 import static com.jhony.jester.play.Utils.DataSingleton.gameSize;
 import static com.jhony.jester.play.Utils.DataSingleton.isHost;
-import static com.jhony.jester.play.Utils.DataSingleton.numbers;
 
 /**
  * Created by JAR on 06-01-2018.
@@ -32,10 +27,10 @@ import static com.jhony.jester.play.Utils.DataSingleton.numbers;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder> {
 
-
-    Context context;
-    String what, payload;
-    View view;
+   private int position;
+   private Context context;
+   private String what, payload;
+   private View view;
     private BindaItemClickListener bindaItemClickListener;
 
     public MyRecyclerAdapter(Context context, String what) {
@@ -60,7 +55,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int pos) {
+        position = holder.getAdapterPosition();
         switch (what) {
             case RECYCLER:
                 //use glide to set the player image
@@ -87,6 +83,11 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                 break;
 
             case GRID:
+                if (!DataSingleton.isTicked.get(position)) {
+                    holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.gradient_red));
+                    holder.rowTv.setTextColor(context.getResources().getColor(R.color.white));
+                }
+
                 holder.rowTv.setText(String.valueOf(DataSingleton.numbers.get(position)));
 
                 holder.mGridContainer.setOnClickListener(new View.OnClickListener() {
@@ -95,17 +96,20 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                     public void onClick(View view) {
                         if (!DataSingleton.didWin && DataSingleton.myTurn)
                             if (!DataSingleton.isTicked.get(position)) {
-                                DataSingleton.isTicked.set(position, true);
-//                                holder.mGridContainer.setCardBackgroundColor(context.getResources().getColor(R.color.green));
-                                holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.gradient_green));
-                                holder.rowTv.setTextColor(context.getResources().getColor(R.color.white));
-                                payload = String.valueOf(numbers.get(position));
-                                bindaItemClickListener.onItemClick(position);
+                               itemClicked(position, holder);
                             }
                     }
                 });
                 break;
         }
+    }
+
+    private void itemClicked(int pos, MyViewHolder holder){
+        DataSingleton.isTicked.set(pos, true);
+//                                holder.mGridContainer.setCardBackgroundColor(context.getResources().getColor(R.color.green));
+        holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.gradient_green));
+        holder.rowTv.setTextColor(context.getResources().getColor(R.color.white));
+        bindaItemClickListener.onItemClick(pos);
     }
 
     public void setListener(BindaItemClickListener bindaItemClickListener) {
@@ -124,6 +128,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         }
 
     }
+
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {

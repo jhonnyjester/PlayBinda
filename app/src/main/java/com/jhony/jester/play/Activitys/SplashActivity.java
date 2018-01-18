@@ -1,50 +1,43 @@
 package com.jhony.jester.play.Activitys;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.view.ContextThemeWrapper;
-import android.text.Layout;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-
 import com.jhony.jester.play.Connections.EverythingNearby;
+import com.jhony.jester.play.Model.AllPlayers;
+import com.jhony.jester.play.Model.PlayerInfo;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
+import com.jhony.jester.play.Utils.DataSingleton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.HOST;
-import static com.jhony.jester.play.Utils.Constants.JOIN;
 import static com.jhony.jester.play.Utils.Constants.WHICH;
+import static com.jhony.jester.play.Utils.DataSingleton.allPlayer;
 import static com.jhony.jester.play.Utils.DataSingleton.isHost;
 import static com.jhony.jester.play.Utils.DataSingleton.mCurrentProgress;
 import static com.jhony.jester.play.Utils.DataSingleton.mLevelUpTarget;
-import static com.jhony.jester.play.Utils.DataSingleton.mUserImage;
 import static com.jhony.jester.play.Utils.DataSingleton.mUserLevel;
 import static com.jhony.jester.play.Utils.DataSingleton.mUserName;
 
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity{
 
+    public static final String TAG = "Splash Activity";
     TextView userName, currentProgress, levelUpTarget, hostGame, joinGame, userLevel;
     ProgressBar progressBar;
     ImageButton settings;
@@ -53,7 +46,6 @@ public class SplashActivity extends AppCompatActivity {
     Animation up, down, left, right, spin;
     Intent intent;
     MaterialDialog.Builder dialog;
-    public static final String TAG = "Splash Activity";
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -79,7 +71,7 @@ public class SplashActivity extends AppCompatActivity {
 
 //        spin = AnimationUtils.loadAnimation(this, R.anim.spin);
 
-       setValues();
+        setValues();
 
         userName.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -97,6 +89,12 @@ public class SplashActivity extends AppCompatActivity {
                 intent.putExtra(WHICH, HOST);
                 isHost = true;
                 everythingNearby = new EverythingNearby(getApplicationContext(), Constants.HOST);
+                allPlayer.add(0,
+                        new AllPlayers(
+                                new PlayerInfo(DataSingleton.mUserName,
+                                        //also add image
+                                        DataSingleton.mUserDesc,
+                                        DataSingleton.mUserLevel)));
                 startActivity(intent);
             }
         });
@@ -141,7 +139,7 @@ public class SplashActivity extends AppCompatActivity {
                 }).show();
     }
 
-    public void setValues(){
+    public void setValues() {
         userName.setText(mUserName);
         currentProgress.setText(String.valueOf(mCurrentProgress));
         levelUpTarget.setText(String.valueOf(mLevelUpTarget));
@@ -151,6 +149,7 @@ public class SplashActivity extends AppCompatActivity {
         userImage.setImageResource(R.drawable.vector);
 //        logo.setImageResource();
     }
+
 
  /*   private void openDialog(String which) {
          CustomDialog.newInstance(getApplicationContext(), which).show(getSupportFragmentManager(), "hostOrJoin");

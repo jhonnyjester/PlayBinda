@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.connection.ConnectionsClient;
+import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
 import com.jhony.jester.play.Connections.EverythingNearby;
 import com.jhony.jester.play.R;
@@ -36,6 +38,7 @@ import static com.jhony.jester.play.Utils.Constants.JOIN;
 import static com.jhony.jester.play.Utils.Constants.JOINED;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
 import static com.jhony.jester.play.Utils.Constants.WHICH;
+import static com.jhony.jester.play.Utils.DataSingleton.hostEndPoint;
 import static com.jhony.jester.play.Utils.DataSingleton.isHost;
 import static com.jhony.jester.play.Utils.DataSingleton.isVisible;
 
@@ -50,6 +53,8 @@ public class WaitingActivity extends AppCompatActivity {
     MyRecyclerAdapter myRecyclerAdapter;
     Animation slideUp, slideDown, spin;
     ConstraintLayout mHostCL, mChatCL;
+    ConnectionsClient connectionsClient;
+    String statusPayload;
     boolean isLocked = false, playerStatus = true;
 
     @Override
@@ -60,12 +65,12 @@ public class WaitingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Nearby.getConnectionsClient(getApplicationContext()).stopDiscovery();
-        Nearby.getConnectionsClient(getApplicationContext()).stopAdvertising();
+        connectionsClient.stopDiscovery();
+        connectionsClient.stopAdvertising();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hosting_layout);
 
@@ -86,7 +91,7 @@ public class WaitingActivity extends AppCompatActivity {
         mRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mRecycler.setItemAnimator(new DefaultItemAnimator());
         mRecycler.setAdapter(myRecyclerAdapter);
-
+        connectionsClient = Nearby.getConnectionsClient(this);
         switch (getIntent().getStringExtra(WHICH)) {
             case HOST:
             mHostCL.setVisibility(View.GONE);
@@ -130,17 +135,23 @@ public class WaitingActivity extends AppCompatActivity {
                         startActivity(new Intent(WaitingActivity.this, GameActivity.class));
                         break;
                     case JOINED:
-                        startActivity(new Intent(WaitingActivity.this, GameActivity.class));
-
-                       /* if (playerStatus) {
+                        if (playerStatus) {
                             playerStatus = false;
                             mReady.setText("Wait! I'M not Ready");
                             mReady.setBackgroundColor(getResources().getColor(R.color.gray));
+                            statusPayload = "5" + "^" +
+                                    false;
+                            connectionsClient.sendPayload(hostEndPoint,
+                                    Payload.fromBytes(statusPayload.getBytes()));
                         } else {
                             playerStatus = true;
                             mReady.setText("Yes! Let's Go!");
                             mReady.setBackground(getResources().getDrawable(R.drawable.button_background));
-                        }*/
+                            statusPayload = "5" + "^" +
+                                    true;
+                            connectionsClient.sendPayload(hostEndPoint,
+                                    Payload.fromBytes(statusPayload.getBytes()));
+                        }
                         break;
                 }
             }
