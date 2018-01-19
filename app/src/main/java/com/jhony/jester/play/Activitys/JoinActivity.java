@@ -36,12 +36,15 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
     Intent joinIntent;
     JSONObject joinPayload;
     ConnectionsClient connectionsClient;
+    DataSingleton dataSingleton;
     private int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.joining_layout);
+
+        dataSingleton = DataSingleton.getOneInstance();
 
         left = findViewById(R.id.left_arrow);
         right = findViewById(R.id.right_arrow);
@@ -64,23 +67,23 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
                         Toast.makeText(JoinActivity.this, "Enter The  Password", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                DataSingleton.allPlayer.add(0,
-                        new AllPlayers(DataSingleton.hosts.get(pos).getEndPointId(),
-                                DataSingleton.hosts.get(pos).getPlayerInfo()));
+                dataSingleton.getAllPlayer().add(0,
+                        new AllPlayers(dataSingleton.getHosts().get(pos).getEndPointId(),
+                                dataSingleton.getHosts().get(pos).getPlayerInfo()));
 
                 try {
                     joinPayload.put(getResString(R.string.payload_id), 4);
-                    joinPayload.put(getResString(R.string.user_name),DataSingleton.mUserName );
-                    joinPayload.put(getResString(R.string.user_desc),DataSingleton.mUserDesc );
-                    joinPayload.put(getResString(R.string.user_exp), DataSingleton.mUserLevel);
+                    joinPayload.put(getResString(R.string.user_name), dataSingleton.getmUserName());
+                    joinPayload.put(getResString(R.string.user_desc), dataSingleton.getmUserDesc());
+                    joinPayload.put(getResString(R.string.user_exp), dataSingleton.getmUserLevel());
                     connectionsClient
-                            .sendPayload(DataSingleton.hosts.get(pos).getEndPointId(),
+                            .sendPayload(dataSingleton.getHosts().get(pos).getEndPointId(),
                                     Payload.fromBytes(joinPayload.toString().getBytes()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                DataSingleton.hostEndPoint = DataSingleton.hosts.get(pos).getEndPointId();
+                dataSingleton.setHostEndPoint(dataSingleton.getHosts().get(pos).getEndPointId());
 
                 startActivity(joinIntent);
                 finish();
@@ -95,11 +98,11 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
         //show the hosts
         if (id == 1) {
             pos = 0;
-            hostsName.setText(DataSingleton.hosts.get(pos).toString());
+            hostsName.setText(dataSingleton.getHosts().get(pos).toString());
         }
     }
 
-    private String getResString(int id){
+    private String getResString(int id) {
         return getResources().getString(id);
     }
 

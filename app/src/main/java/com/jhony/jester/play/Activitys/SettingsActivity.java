@@ -1,6 +1,7 @@
 package com.jhony.jester.play.Activitys;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,11 +20,6 @@ import com.jhony.jester.play.Utils.DataSingleton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.jhony.jester.play.Utils.DataSingleton.getRotation;
-import static com.jhony.jester.play.Utils.DataSingleton.isMusic;
-import static com.jhony.jester.play.Utils.DataSingleton.isSound;
-import static com.jhony.jester.play.Utils.DataSingleton.isVibration;
-import static com.jhony.jester.play.Utils.DataSingleton.mUserName;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -32,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
     TextView mUserNameSettings, mMusic, mSound, mRotation, mVibration;
     Button signOut;
     Animation spin;
+    DataSingleton dataSingleton;
     MaterialDialog.Builder dialog;
 
     @Override
@@ -84,12 +81,12 @@ public class SettingsActivity extends AppCompatActivity {
         mMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DataSingleton.isMusic) {
-                    DataSingleton.isMusic = false;
+                if (dataSingleton.isMusic()) {
+                    dataSingleton.setMusic(false);
                     mMusic.setTextColor(getResources().getColor(R.color.gray));
                     mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_music), null, null, null);
                 } else {
-                    DataSingleton.isMusic = true;
+                    dataSingleton.setMusic(true);
                     mMusic.setTextColor(getResources().getColor(R.color.primary));
                     mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_music_note_black_24dp), null, null, null);
                 }
@@ -99,19 +96,19 @@ public class SettingsActivity extends AppCompatActivity {
         mRotation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (DataSingleton.getRotation) {
+                switch (dataSingleton.getGetRotation()) {
                     case Constants.ROTATION:
-                        DataSingleton.getRotation = Constants.PORTRAIT;
+                        dataSingleton.setGetRotation(Constants.PORTRAIT);
                         mRotation.setText(Constants.PORTRAIT);
                         mRotation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_portrait_only), null, null, null);
                         break;
                     case Constants.PORTRAIT:
-                        DataSingleton.getRotation = Constants.LANDSCAPE;
+                        dataSingleton.setGetRotation(Constants.LANDSCAPE);
                         mRotation.setText(Constants.LANDSCAPE);
                         mRotation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_landscape_only), null, null, null);
                         break;
                     case Constants.LANDSCAPE:
-                        DataSingleton.getRotation = Constants.ROTATION;
+                        dataSingleton.setGetRotation(Constants.ROTATION);
                         mRotation.setText(Constants.ROTATION);
                         mRotation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_screen_rotation_black_24dp), null, null, null);
                         break;
@@ -122,12 +119,12 @@ public class SettingsActivity extends AppCompatActivity {
         mSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DataSingleton.isSound) {
-                    DataSingleton.isSound = false;
+                if (dataSingleton.isSound()) {
+                    dataSingleton.setSound(false);
                     mSound.setTextColor(getResources().getColor(R.color.gray));
                     mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_sound), null, null, null);
                 } else {
-                    DataSingleton.isSound = true;
+                    dataSingleton.setSound(true);
                     mSound.setTextColor(getResources().getColor(R.color.primary));
                     mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_sound), null, null, null);
                 }
@@ -137,13 +134,13 @@ public class SettingsActivity extends AppCompatActivity {
         mVibration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DataSingleton.isVibration) {
-                    DataSingleton.isVibration = false;
+                if (dataSingleton.isVibration()) {
+                    dataSingleton.setVibration(false);
                     mVibration.setTextColor(getResources().getColor(R.color.gray));
                     mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_vibration), null, null, null);
 
                 } else {
-                    DataSingleton.isVibration = true;
+                    dataSingleton.setVibration(true);
                     mVibration.setTextColor(getResources().getColor(R.color.primary));
                     mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_vibration_black_24dp), null, null, null);
                 }
@@ -161,8 +158,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initiation() {
-        mUserNameSettings.setText(mUserName);
-        if (isMusic) {
+        dataSingleton = DataSingleton.getOneInstance();
+        mUserNameSettings.setText(dataSingleton.getmUserName());
+        if (dataSingleton.isMusic()) {
             mMusic.setTextColor(getResources().getColor(R.color.primary));
             mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_music_note_black_24dp), null, null, null);
         } else {
@@ -170,21 +168,21 @@ public class SettingsActivity extends AppCompatActivity {
             mMusic.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_music), null, null, null);
         }
 
-        if (isSound) {
+        if (dataSingleton.isSound()) {
             mSound.setTextColor(getResources().getColor(R.color.primary));
             mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_sound), null, null, null);
         } else {
             mSound.setTextColor(getResources().getColor(R.color.gray));
             mSound.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_sound), null, null, null);
         }
-        if (isVibration) {
+        if (dataSingleton.isVibration()) {
             mVibration.setTextColor(getResources().getColor(R.color.primary));
             mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_vibration_black_24dp), null, null, null);
         } else {
             mVibration.setTextColor(getResources().getColor(R.color.gray));
             mVibration.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_no_vibration), null, null, null);
         }
-        switch (getRotation) {
+        switch (dataSingleton.getGetRotation()) {
             case Constants.ROTATION: mRotation.setText(Constants.ROTATION);
                 mRotation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_screen_rotation_black_24dp), null, null, null);
                 break;
@@ -201,11 +199,11 @@ public class SettingsActivity extends AppCompatActivity {
         dialog = new MaterialDialog.Builder(this);
         dialog.title("User Name")
                 .titleColor(getResources().getColor(R.color.accent))
-                .input(mUserName, null, true, new MaterialDialog.InputCallback() {
+                .input(dataSingleton.getmUserName(), null, true, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         if (!TextUtils.isEmpty(input)) {
-                            mUserName = input.toString();
+                            dataSingleton.setmUserName(input.toString());
                             mUserNameSettings.setText(input);
                         }
                     }

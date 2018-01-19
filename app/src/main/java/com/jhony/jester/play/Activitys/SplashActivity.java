@@ -26,13 +26,6 @@ import com.jhony.jester.play.Utils.DataSingleton;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.HOST;
-import static com.jhony.jester.play.Utils.DataSingleton.allPlayer;
-import static com.jhony.jester.play.Utils.DataSingleton.isHost;
-import static com.jhony.jester.play.Utils.DataSingleton.mCurrentProgress;
-import static com.jhony.jester.play.Utils.DataSingleton.mLevelUpTarget;
-import static com.jhony.jester.play.Utils.DataSingleton.mUserLevel;
-import static com.jhony.jester.play.Utils.DataSingleton.mUserName;
-
 
 public class SplashActivity extends AppCompatActivity{
 
@@ -44,6 +37,7 @@ public class SplashActivity extends AppCompatActivity{
     CircleImageView userImage, logo;
     Animation up, down, left, right, spin;
     Intent intent;
+    DataSingleton dataSingleton;
     MaterialDialog.Builder dialog;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -52,16 +46,18 @@ public class SplashActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        userName = (TextView) findViewById(R.id.user_name);
-        currentProgress = (TextView) findViewById(R.id.current_progress_tv);
-        levelUpTarget = (TextView) findViewById(R.id.lvl_up_target);
-        hostGame = (TextView) findViewById(R.id.host_tv);
-        joinGame = (TextView) findViewById(R.id.join_tv);
-        userLevel = (TextView) findViewById(R.id.exp_tv);
-        settings = (ImageButton) findViewById(R.id.settings_btn);
-        userImage = (CircleImageView) findViewById(R.id.user_image);
-        logo = (CircleImageView) findViewById(R.id.circleImageView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        dataSingleton = DataSingleton.getOneInstance();
+
+        userName = findViewById(R.id.user_name);
+        currentProgress =  findViewById(R.id.current_progress_tv);
+        levelUpTarget =  findViewById(R.id.lvl_up_target);
+        hostGame = findViewById(R.id.host_tv);
+        joinGame = findViewById(R.id.join_tv);
+        userLevel = findViewById(R.id.exp_tv);
+        settings =  findViewById(R.id.settings_btn);
+        userImage =  findViewById(R.id.user_image);
+        logo =  findViewById(R.id.circleImageView);
+        progressBar = findViewById(R.id.progressBar);
 
 //        up = new AnimationUtils().loadAnimation(getApplicationContext(), R.anim.slide_up);
 //        down = new AnimationUtils().loadAnimation(getApplicationContext(), R.anim.slide_down);
@@ -86,14 +82,14 @@ public class SplashActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 intent.putExtra(getResString(R.string.which), HOST);
-                isHost = true;
+                dataSingleton.setHost(true);
                 everythingNearby = new EverythingNearby(getApplicationContext(), Constants.HOST);
-                allPlayer.add(0,
+                dataSingleton.getAllPlayer().add(0,
                         new AllPlayers(
-                                new PlayerInfo(DataSingleton.mUserName,
+                                new PlayerInfo(dataSingleton.getmUserName(),
                                         //also add image
-                                        DataSingleton.mUserDesc,
-                                        DataSingleton.mUserLevel)));
+                                        dataSingleton.getmUserDesc(),
+                                        dataSingleton.getmUserLevel())));
                 startActivity(intent);
             }
         });
@@ -101,7 +97,7 @@ public class SplashActivity extends AppCompatActivity{
         joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isHost = false;
+                dataSingleton.setHost(false);
                 everythingNearby = new EverythingNearby(getApplicationContext(), Constants.JOIN);
                 startActivity(new Intent(SplashActivity.this, JoinActivity.class));
             }
@@ -127,11 +123,11 @@ public class SplashActivity extends AppCompatActivity{
         dialog = new MaterialDialog.Builder(this);
         dialog.title("User Name")
                 .titleColor(getResources().getColor(R.color.accent))
-                .input(mUserName, null, true, new MaterialDialog.InputCallback() {
+                .input(dataSingleton.getmUserName(), null, true, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         if (!TextUtils.isEmpty(input)) {
-                            mUserName = input.toString();
+                            dataSingleton.setmUserName(input.toString());
                             userName.setText(input);
                         }
                     }
@@ -139,12 +135,12 @@ public class SplashActivity extends AppCompatActivity{
     }
 
     public void setValues() {
-        userName.setText(mUserName);
-        currentProgress.setText(String.valueOf(mCurrentProgress));
-        levelUpTarget.setText(String.valueOf(mLevelUpTarget));
+        userName.setText(dataSingleton.getmUserName());
+        currentProgress.setText(String.valueOf(dataSingleton.getmCurrentProgress()));
+        levelUpTarget.setText(String.valueOf(dataSingleton.getmLevelUpTarget()));
         progressBar.setProgress(75);
         progressBar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
-        userLevel.setText(String.valueOf(mUserLevel));
+        userLevel.setText(String.valueOf(dataSingleton.getmUserLevel()));
         userImage.setImageResource(R.drawable.vector);
 //        logo.setImageResource();
     }

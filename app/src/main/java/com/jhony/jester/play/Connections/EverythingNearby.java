@@ -37,6 +37,8 @@ public class EverythingNearby implements SplitListener {
     int which;
     private Context context;
     private ConnectionsClient connectionsClient;
+    private DataSingleton dataSingleton;
+
     private final ConnectionLifecycleCallback connectionLifecycleCallback = new ConnectionLifecycleCallback() {
         @Override
         public void onConnectionInitiated(String endPoint, ConnectionInfo connectionInfo) {
@@ -56,10 +58,10 @@ public class EverythingNearby implements SplitListener {
                         initialPayload = new JSONObject();
                         try {
                             initialPayload.put(getString(R.string.payload_id), 1);
-                            initialPayload.put(getString(R.string.app_name), DataSingleton.mUserName);
-                            initialPayload.put(getString(R.string.user_desc), DataSingleton.mUserDesc);
-                            initialPayload.put(getString(R.string.user_exp), DataSingleton.mUserLevel);
-                            initialPayload.put(getString(R.string.user_img), DataSingleton.mUserImage);
+                            initialPayload.put(getString(R.string.app_name), dataSingleton.getmUserName());
+                            initialPayload.put(getString(R.string.user_desc), dataSingleton.getmUserDesc());
+                            initialPayload.put(getString(R.string.user_exp), dataSingleton.getmUserLevel());
+                            initialPayload.put(getString(R.string.user_img), dataSingleton.getmUserImage());
                             initialPayload.put(getString(R.string.password), "Password");
                             connectionsClient.sendPayload(endPoint, Payload.fromBytes(initialPayload.toString().getBytes()));
                         } catch (JSONException e) {
@@ -89,7 +91,7 @@ public class EverythingNearby implements SplitListener {
         public void onEndpointFound(String endPoint, DiscoveredEndpointInfo discoveredEndpointInfo) {
 
             connectionsClient.requestConnection(
-                    DataSingleton.mUserName,
+                    dataSingleton.getmUserName(),
                     endPoint,
                     connectionLifecycleCallback)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -135,6 +137,7 @@ public class EverythingNearby implements SplitListener {
         this.context = context;
         this.connectionsClient = Nearby.getConnectionsClient(context);
         this.which = which;
+        dataSingleton = DataSingleton.getOneInstance();
         switch (which) {
             case Constants.HOST:
                 startAdvertising();
@@ -147,7 +150,7 @@ public class EverythingNearby implements SplitListener {
 
     private void startAdvertising() {
         connectionsClient.startAdvertising(
-                DataSingleton.mUserName,
+                dataSingleton.getmUserName(),
                 SERVICE_ID,
                 connectionLifecycleCallback,
                 new AdvertisingOptions(Strategy.P2P_STAR))
@@ -190,12 +193,12 @@ public class EverythingNearby implements SplitListener {
         if (id == 4) {
             //send payload
             payloadString = "4" + "^" +
-                    DataSingleton.allPlayer.get(0).getPlayerInfo().getmUserName() + "^" +
-                    DataSingleton.allPlayer.get(0).getPlayerInfo().getmUserDesc() + "^" +
-                    DataSingleton.allPlayer.get(0).getPlayerInfo().getExp();
+                    dataSingleton.getAllPlayer().get(0).getPlayerInfo().getmUserName() + "^" +
+                    dataSingleton.getAllPlayer().get(0).getPlayerInfo().getmUserDesc() + "^" +
+                    dataSingleton.getAllPlayer().get(0).getPlayerInfo().getExp();
 
             connectionsClient.sendPayload(
-                    DataSingleton.endPoints,
+                    dataSingleton.getEndPoints(),
                     Payload.fromBytes(payloadString.getBytes()));
         }
     }

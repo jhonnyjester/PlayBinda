@@ -3,6 +3,7 @@ package com.jhony.jester.play.Adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.view.DragAndDropPermissions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.GRID;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
-import static com.jhony.jester.play.Utils.DataSingleton.gameSize;
-import static com.jhony.jester.play.Utils.DataSingleton.isHost;
 
 /**
  * Created by JAR on 06-01-2018.
@@ -29,13 +28,15 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
    private int position;
    private Context context;
-   private int what;
+   private int what, gameSize;
    private View view;
+   private DataSingleton dataSingleton;
     private BindaItemClickListener bindaItemClickListener;
 
     public MyRecyclerAdapter(Context context, int what) {
         this.context = context;
         this.what = what;
+        dataSingleton = DataSingleton.getOneInstance();
     }
 
     @Override
@@ -63,7 +64,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                 // set description and name
                 Glide.with(context).load(R.drawable.vector).into(holder.mUserImage);
                 if (position == getItemCount() - 1) {
-                    if (isHost)
+                    if (dataSingleton.isHost())
                         holder.mWaiting.setVisibility(View.VISIBLE);
                 } else holder.mWaiting.setVisibility(View.GONE);
                 if (position % 2 == 0) {
@@ -83,19 +84,19 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                 break;
 
             case GRID:
-                if (!DataSingleton.isTicked.get(position)) {
+                if (!dataSingleton.getIsTicked().get(position)) {
                     holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.gradient_red));
                     holder.rowTv.setTextColor(context.getResources().getColor(R.color.white));
                 }
 
-                holder.rowTv.setText(String.valueOf(DataSingleton.numbers.get(position)));
+                holder.rowTv.setText(String.valueOf(dataSingleton.getNumbers().get(position)));
 
                 holder.mGridContainer.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View view) {
-                        if (!DataSingleton.didWin && DataSingleton.myTurn)
-                            if (!DataSingleton.isTicked.get(position)) {
+                        if (!dataSingleton.isDidWin() && dataSingleton.isMyTurn())
+                            if (!dataSingleton.getIsTicked().get(position)) {
                                itemClicked(position, holder);
                             }
                     }
@@ -105,7 +106,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
     }
 
     private void itemClicked(int pos, MyViewHolder holder){
-        DataSingleton.isTicked.set(pos, true);
+        dataSingleton.getIsTicked().set(pos, true);
 //                                holder.mGridContainer.setCardBackgroundColor(context.getResources().getColor(R.color.green));
         holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.gradient_green));
         holder.rowTv.setTextColor(context.getResources().getColor(R.color.white));
@@ -122,6 +123,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
             case RECYCLER:
                 return 10 + 1;
             case GRID:
+                gameSize = dataSingleton.getGameSize();
                 return gameSize * gameSize;
             default:
                 return 3;

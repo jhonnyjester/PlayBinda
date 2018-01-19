@@ -25,16 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static com.jhony.jester.play.Utils.Constants.GRID;
-import static com.jhony.jester.play.Utils.DataSingleton.allPlayer;
-import static com.jhony.jester.play.Utils.DataSingleton.currentNumber;
-import static com.jhony.jester.play.Utils.DataSingleton.didWin;
-import static com.jhony.jester.play.Utils.DataSingleton.endPoints;
-import static com.jhony.jester.play.Utils.DataSingleton.gameSize;
-import static com.jhony.jester.play.Utils.DataSingleton.hostEndPoint;
-import static com.jhony.jester.play.Utils.DataSingleton.isHost;
-import static com.jhony.jester.play.Utils.DataSingleton.isTicked;
-import static com.jhony.jester.play.Utils.DataSingleton.myTurn;
-import static com.jhony.jester.play.Utils.DataSingleton.numbers;
+
 
 public class GameActivity extends AppCompatActivity implements BindaItemClickListener, SplitListener {
 
@@ -49,7 +40,9 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
     JSONObject winnerPayload;
     int turnCount = -1;
     int pos;
-    int[] rowCount = new int[gameSize], columnCount = new int[gameSize];
+    int gameSize;
+    DataSingleton dataSingleton;
+    int[] rowCount, columnCount;
     int d1Count = 0, d2Count = 0;
     int column;
     int bindaCount = 0;
@@ -60,12 +53,18 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        dataSingleton = DataSingleton.getOneInstance();
+
+        gameSize = dataSingleton.getGameSize();
+        columnCount = new int[gameSize];
+        rowCount = new int[gameSize];
+
         turnPayLoad = new JSONObject();
         numPayload = new JSONObject();
         winnerPayload = new JSONObject();
 
-        didWin = false;
-        playerSize = allPlayer.size();
+        dataSingleton.setDidWin(false);
+        playerSize = dataSingleton.getAllPlayer().size();
         connectionsClient = Nearby.getConnectionsClient(this);
         bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
         spin = AnimationUtils.loadAnimation(this, R.anim.spin);
@@ -79,8 +78,8 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         number = findViewById(R.id.number);
 
 
-        numbers.clear();
-        isTicked.clear();
+        dataSingleton.getNumbers().clear();
+        dataSingleton.getIsTicked().clear();
 
         for (int i = 0; i < gameSize; i++) {
             rowCount[i] = 0;
@@ -88,11 +87,11 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         }
 
         for (int i = 0; i < (gameSize * gameSize); i++) {
-            numbers.add(i + 1);
-            isTicked.add(false);
+            dataSingleton.getNumbers().add(i + 1);
+            dataSingleton.getIsTicked().add(false);
         }
 
-        Collections.shuffle(numbers);
+        Collections.shuffle(dataSingleton.getNumbers());
 
         myRecyclerAdapter = new MyRecyclerAdapter(this, GRID);
         mRecycler.setLayoutManager(new GridLayoutManager(getApplicationContext(), gameSize));
@@ -100,7 +99,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         mRecycler.setAdapter(myRecyclerAdapter);
         myRecyclerAdapter.setListener(this);
 
-        if (isHost) {
+        if (dataSingleton.isHost()) {
             worryAboutTurns();
         }
 
@@ -109,12 +108,12 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
     private void worryAboutTurns() {
         turnCount++;
         if (turnCount == playerSize) turnCount = 0;
-        if (turnCount == playerSize - 1) myTurn = true;
+        if (turnCount == playerSize - 1) dataSingleton.setMyTurn(true);
         else {
             try {
                 turnPayLoad.put(getResString(R.string.payload_id), 3);
                 turnPayLoad.put(getResString(R.string.trun_boolean), true);
-                connectionsClient.sendPayload(allPlayer.get(turnCount).getEndPointId(),
+                connectionsClient.sendPayload(dataSingleton.getAllPlayer().get(turnCount).getEndPointId(),
                         Payload.fromBytes(turnPayLoad.toString().getBytes()));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -170,16 +169,13 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
 
         if (bindaCount == 5) {
             bindaCount = 0;
-            didWin = true;
-            if (isHost) {
-               /* winnerPayload = "6" + "^" +
-                        true + "^" +
-                        myId;*/
+            dataSingleton.setDidWin(true);
+            if (dataSingleton.isHost()) {
                 try {
                     winnerPayload.put(getResString(R.string.payload_id), 6);
-                    winnerPayload.put(getResString(R.string.user_id), DataSingleton.myId);
+                    winnerPayload.put(getResString(R.string.user_id), dataSingleton.getMyId());
                     winnerPayload.put(getResString(R.string.win_boolean), true);
-                    connectionsClient.sendPayload(endPoints,
+                    connectionsClient.sendPayload(dataSingleton.getEndPoints(),
                             Payload.fromBytes(winnerPayload.toString().getBytes()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -187,9 +183,9 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
             }
             try {
                 winnerPayload.put(getResString(R.string.payload_id), 6);
-                winnerPayload.put(getResString(R.string.user_id), DataSingleton.myId);
+                winnerPayload.put(getResString(R.string.user_id), dataSingleton.getMyId());
                 winnerPayload.put(getResString(R.string.win_boolean), true);
-                connectionsClient.sendPayload(hostEndPoint,
+                connectionsClient.sendPayload(dataSingleton.getHostEndPoint(),
                         Payload.fromBytes(winnerPayload.toString().getBytes()));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -212,24 +208,24 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
 
         try {
             numPayload.put(getResString(R.string.payload_id), 2);
-            numPayload.put(getResString(R.string.number), DataSingleton.numbers.get(position));
+            numPayload.put(getResString(R.string.number), dataSingleton.getNumbers().get(position));
             connectionsClient.
-                    sendPayload(hostEndPoint,
+                    sendPayload(dataSingleton.getHostEndPoint(),
                             Payload.fromBytes(numPayload.toString().getBytes()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        DataSingleton.myTurn = false;
+        dataSingleton.setMyTurn(false);
     }
 
     @Override
     public void onSplitCompleted(int id) {
         if (id == 2) {
-            number.setText(currentNumber);
-            pos = Arrays.binarySearch(numbers.toArray(), currentNumber);
-            DataSingleton.isTicked.set(pos, true);
+            number.setText(dataSingleton.getCurrentNumber());
+            pos = Arrays.binarySearch(dataSingleton.getNumbers().toArray(), dataSingleton.getCurrentNumber());
+            dataSingleton.getIsTicked().set(pos, true);
 
-            if (isHost) {
+            if (dataSingleton.isHost()) {
                 worryAboutTurns();
             }
         }

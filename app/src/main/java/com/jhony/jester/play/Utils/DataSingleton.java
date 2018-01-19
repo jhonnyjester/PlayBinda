@@ -1,64 +1,232 @@
 package com.jhony.jester.play.Utils;
 
 import android.net.Uri;
-import android.net.wifi.p2p.WifiP2pDevice;
 
 import com.jhony.jester.play.Model.AllPlayers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by JAR on 23-08-2017.
  */
 
 public class DataSingleton {
+    private static DataSingleton oneInstance;
+    private int mUserLevel = 13;
+    private int mCurrentProgress = 124;
+    private int mLevelUpTarget = 500;
+    private int gameSize = 5;
+    private int currentNumber;
+    private int getRotation = Constants.ROTATION;
+    private boolean didWin = false;
+    private boolean myTurn = true;
+    private boolean isMusic = true;
+    private boolean isHost = true;
+    private boolean isVisible = false;
+    private boolean isSound = true;
+    private boolean isVibration = true;
+    private String mUserDesc = "World Classified";
+    private String myId = "12346";
+    private String mUserName = "Jhony Jester";
+    private String hostEndPoint = "";
+    private String mUserImage = null;
+    private ArrayList<Integer> numbers = new ArrayList<>();
+    private ArrayList<Boolean> isTicked = new ArrayList<>();
+    private ArrayList<AllPlayers> allPlayer = new ArrayList<>();
+    private ArrayList<String> endPoints = new ArrayList<>();
+    private ArrayList<AllPlayers> hosts = new ArrayList<>();
 
-    public static String myId = "12346";
+    private DataSingleton() {
 
-    public static String mUserName = "Jhony Jester";
+    }
 
-    public static String mUserDesc = "World Classified";
+    public static DataSingleton getOneInstance() {
+        if (oneInstance == null)
+            oneInstance = new DataSingleton();
+        return oneInstance;
+    }
 
-    public static String hostEndPoint = "";
+    public String getMyId() {
+        return myId;
+    }
 
-    public static int mUserLevel = 13;
+    public void setMyId(String myId) {
+        this.myId = myId;
+    }
 
-    public static int mCurrentProgress = 124;
+    public String getmUserName() {
+        return mUserName;
+    }
 
-    public static int mLevelUpTarget = 500;
+    public void setmUserName(String mUserName) {
+        this.mUserName = mUserName;
+    }
 
-    public static Uri mUserImage = null;
+    public String getmUserDesc() {
+        return mUserDesc;
+    }
 
-    public static int gameSize = 5;
+    public void setmUserDesc(String mUserDesc) {
+        this.mUserDesc = mUserDesc;
+    }
 
-    public static int currentNumber;
+    public String getHostEndPoint() {
+        return hostEndPoint;
+    }
 
-    public static boolean didWin = false;
+    public void setHostEndPoint(String hostEndPoint) {
+        this.hostEndPoint = hostEndPoint;
+    }
 
-    public static boolean myTurn = true;
+    public int getmUserLevel() {
+        return mUserLevel;
+    }
 
-    public static boolean isMusic = true;
+    public void setmUserLevel(int mUserLevel) {
+        this.mUserLevel = mUserLevel;
+    }
 
-    public static boolean isHost = true;
+    public int getmCurrentProgress() {
+        return mCurrentProgress;
+    }
 
-    public static boolean isVisible = false;
+    public void setmCurrentProgress(int mCurrentProgress) {
+        this.mCurrentProgress = mCurrentProgress;
+    }
 
-    public static int getRotation = Constants.ROTATION;
+    public int getmLevelUpTarget() {
+        return mLevelUpTarget;
+    }
 
+    public void setmLevelUpTarget(int mLevelUpTarget) {
+        this.mLevelUpTarget = mLevelUpTarget;
+    }
 
-    public static boolean isSound = true;
+    public String getmUserImage() {
+        return mUserImage;
+    }
 
-    public static boolean isVibration = true;
+    public void setmUserImage(String mUserImage) {
+        this.mUserImage = mUserImage;
+    }
 
-    public static ArrayList<Integer> numbers = new ArrayList<>();
+    public int getGameSize() {
+        return gameSize;
+    }
 
-    public static ArrayList<Boolean> isTicked = new ArrayList<>();
+    public void setGameSize(int gameSize) {
+        this.gameSize = gameSize;
+    }
 
-    public static ArrayList<AllPlayers> allPlayer = new ArrayList<>();
+    public int getCurrentNumber() {
+        return currentNumber;
+    }
 
-    public static ArrayList<String> endPoints = new ArrayList<>();
+    public void setCurrentNumber(int currentNumber) {
+        this.currentNumber = currentNumber;
+    }
 
-    public static ArrayList<AllPlayers> hosts = new ArrayList<>();
+    public boolean isDidWin() {
+        return didWin;
+    }
 
+    public void setDidWin(boolean didWin) {
+        this.didWin = didWin;
+    }
+
+    public boolean isMyTurn() {
+        return myTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+        this.myTurn = myTurn;
+    }
+
+    public boolean isMusic() {
+        return isMusic;
+    }
+
+    public void setMusic(boolean music) {
+        isMusic = music;
+    }
+
+    public boolean isHost() {
+        return isHost;
+    }
+
+    public void setHost(boolean host) {
+        isHost = host;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
+
+    public int getGetRotation() {
+        return getRotation;
+    }
+
+    public void setGetRotation(int getRotation) {
+        this.getRotation = getRotation;
+    }
+
+    public boolean isSound() {
+        return isSound;
+    }
+
+    public void setSound(boolean sound) {
+        isSound = sound;
+    }
+
+    public boolean isVibration() {
+        return isVibration;
+    }
+
+    public void setVibration(boolean vibration) {
+        isVibration = vibration;
+    }
+
+    public ArrayList<Integer> getNumbers() {
+        return numbers;
+    }
+
+    public void setNumbers(ArrayList<Integer> numbers) {
+        this.numbers = numbers;
+    }
+
+    public ArrayList<Boolean> getIsTicked() {
+        return isTicked;
+    }
+
+    public void setIsTicked(ArrayList<Boolean> isTicked) {
+        this.isTicked = isTicked;
+    }
+
+    public ArrayList<AllPlayers> getAllPlayer() {
+        return allPlayer;
+    }
+
+    public void setAllPlayer(ArrayList<AllPlayers> allPlayer) {
+        this.allPlayer = allPlayer;
+    }
+
+    public ArrayList<String> getEndPoints() {
+        return endPoints;
+    }
+
+    public void setEndPoints(ArrayList<String> endPoints) {
+        this.endPoints = endPoints;
+    }
+
+    public ArrayList<AllPlayers> getHosts() {
+        return hosts;
+    }
+
+    public void setHosts(ArrayList<AllPlayers> hosts) {
+        this.hosts = hosts;
+    }
 }

@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.DragAndDropPermissions;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -30,8 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.jhony.jester.play.Utils.Constants.HOST;
 import static com.jhony.jester.play.Utils.Constants.JOINED;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
-import static com.jhony.jester.play.Utils.DataSingleton.hostEndPoint;
-import static com.jhony.jester.play.Utils.DataSingleton.isVisible;
+
 
 public class WaitingActivity extends AppCompatActivity {
 
@@ -45,6 +45,7 @@ public class WaitingActivity extends AppCompatActivity {
     Animation slideUp, slideDown, spin;
     ConstraintLayout mHostCL, mChatCL;
     ConnectionsClient connectionsClient;
+    DataSingleton dataSingleton;
     JSONObject statusPayload;
     boolean isLocked = false, playerStatus = true;
 
@@ -66,6 +67,7 @@ public class WaitingActivity extends AppCompatActivity {
         setContentView(R.layout.hosting_layout);
 
         statusPayload = new JSONObject();
+        dataSingleton = DataSingleton.getOneInstance();
 
         mHostCL = findViewById(R.id.host_set_cl);
         mChatCL = findViewById(R.id.chat_cl);
@@ -105,14 +107,14 @@ public class WaitingActivity extends AppCompatActivity {
         host_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isVisible) {
+                if (dataSingleton.isVisible()) {
                     host_set.startAnimation(spin);
-                    isVisible = false;
+                    dataSingleton.setVisible(false);
                     mHostCL.setVisibility(View.GONE);
                     mChatCL.setVisibility(View.VISIBLE);
                 } else {
                     host_set.startAnimation(spin);
-                    isVisible = true;
+                    dataSingleton.setVisible(true);
                     mHostCL.setVisibility(View.VISIBLE);
                     mChatCL.setVisibility(View.GONE);
                 }
@@ -135,9 +137,9 @@ public class WaitingActivity extends AppCompatActivity {
 
                             try {
                                 statusPayload.put(getResString(R.string.payload_id), 5);
-                                statusPayload.put(getResString(R.string.user_id), DataSingleton.myId);
+                                statusPayload.put(getResString(R.string.user_id), dataSingleton.getMyId());
                                 statusPayload.put(getResString(R.string.status), false);
-                                connectionsClient.sendPayload(hostEndPoint,
+                                connectionsClient.sendPayload(dataSingleton.getHostEndPoint(),
                                         Payload.fromBytes(statusPayload.toString().getBytes()));
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -148,10 +150,10 @@ public class WaitingActivity extends AppCompatActivity {
                             mReady.setBackground(getResources().getDrawable(R.drawable.button_background));
 
                             try {
-                                statusPayload.put(getResString(R.string.user_id), DataSingleton.myId);
+                                statusPayload.put(getResString(R.string.user_id), dataSingleton.getMyId());
                                 statusPayload.put(getResString(R.string.payload_id), 5);
                                 statusPayload.put(getResString(R.string.status), true);
-                                connectionsClient.sendPayload(hostEndPoint,
+                                connectionsClient.sendPayload(dataSingleton.getHostEndPoint(),
                                         Payload.fromBytes(statusPayload.toString().getBytes()));
                             } catch (JSONException e) {
                                 e.printStackTrace();
