@@ -1,45 +1,36 @@
 package com.jhony.jester.play.Activitys;
 
-import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
-import com.jhony.jester.play.Connections.EverythingNearby;
 import com.jhony.jester.play.R;
-import com.jhony.jester.play.Utils.Constants;
+import com.jhony.jester.play.Utils.DataSingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.HOST;
-import static com.jhony.jester.play.Utils.Constants.JOIN;
 import static com.jhony.jester.play.Utils.Constants.JOINED;
 import static com.jhony.jester.play.Utils.Constants.RECYCLER;
-import static com.jhony.jester.play.Utils.Constants.WHICH;
 import static com.jhony.jester.play.Utils.DataSingleton.hostEndPoint;
-import static com.jhony.jester.play.Utils.DataSingleton.isHost;
 import static com.jhony.jester.play.Utils.DataSingleton.isVisible;
 
 public class WaitingActivity extends AppCompatActivity {
@@ -54,7 +45,7 @@ public class WaitingActivity extends AppCompatActivity {
     Animation slideUp, slideDown, spin;
     ConstraintLayout mHostCL, mChatCL;
     ConnectionsClient connectionsClient;
-    String statusPayload;
+    JSONObject statusPayload;
     boolean isLocked = false, playerStatus = true;
 
     @Override
@@ -74,6 +65,8 @@ public class WaitingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hosting_layout);
 
+        statusPayload = new JSONObject();
+
         mHostCL = findViewById(R.id.host_set_cl);
         mChatCL = findViewById(R.id.chat_cl);
         mPassword = findViewById(R.id.pass_et);
@@ -92,9 +85,9 @@ public class WaitingActivity extends AppCompatActivity {
         mRecycler.setItemAnimator(new DefaultItemAnimator());
         mRecycler.setAdapter(myRecyclerAdapter);
         connectionsClient = Nearby.getConnectionsClient(this);
-        switch (getIntent().getStringExtra(WHICH)) {
+        switch (getIntent().getIntExtra(getResString(R.string.which), 0)) {
             case HOST:
-            mHostCL.setVisibility(View.GONE);
+                mHostCL.setVisibility(View.GONE);
 
                 break;
 
@@ -112,7 +105,7 @@ public class WaitingActivity extends AppCompatActivity {
         host_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isVisible){
+                if (isVisible) {
                     host_set.startAnimation(spin);
                     isVisible = false;
                     mHostCL.setVisibility(View.GONE);
@@ -129,7 +122,7 @@ public class WaitingActivity extends AppCompatActivity {
         mReady.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (getIntent().getStringExtra(WHICH)) {
+                switch (getIntent().getIntExtra(getResString(R.string.which), 0)) {
                     case HOST:
                         //check if all are ready and then proceed
                         startActivity(new Intent(WaitingActivity.this, GameActivity.class));
@@ -139,18 +132,30 @@ public class WaitingActivity extends AppCompatActivity {
                             playerStatus = false;
                             mReady.setText("Wait! I'M not Ready");
                             mReady.setBackgroundColor(getResources().getColor(R.color.gray));
-                            statusPayload = "5" + "^" +
-                                    false;
-                            connectionsClient.sendPayload(hostEndPoint,
-                                    Payload.fromBytes(statusPayload.getBytes()));
+
+                            try {
+                                statusPayload.put(getResString(R.string.payload_id), 5);
+                                statusPayload.put(getResString(R.string.user_id), DataSingleton.myId);
+                                statusPayload.put(getResString(R.string.status), false);
+                                connectionsClient.sendPayload(hostEndPoint,
+                                        Payload.fromBytes(statusPayload.toString().getBytes()));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             playerStatus = true;
                             mReady.setText("Yes! Let's Go!");
                             mReady.setBackground(getResources().getDrawable(R.drawable.button_background));
-                            statusPayload = "5" + "^" +
-                                    true;
-                            connectionsClient.sendPayload(hostEndPoint,
-                                    Payload.fromBytes(statusPayload.getBytes()));
+
+                            try {
+                                statusPayload.put(getResString(R.string.user_id), DataSingleton.myId);
+                                statusPayload.put(getResString(R.string.payload_id), 5);
+                                statusPayload.put(getResString(R.string.status), true);
+                                connectionsClient.sendPayload(hostEndPoint,
+                                        Payload.fromBytes(statusPayload.toString().getBytes()));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                         break;
                 }
@@ -202,6 +207,10 @@ public class WaitingActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private String getResString(int id) {
+        return getResources().getString(id);
     }
 
 }

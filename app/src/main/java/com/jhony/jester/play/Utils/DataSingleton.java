@@ -44,7 +44,8 @@ public class DataSingleton {
 
     public static boolean isVisible = false;
 
-    public static String getRotation = Constants.ROTATION;
+    public static int getRotation = Constants.ROTATION;
+
 
     public static boolean isSound = true;
 

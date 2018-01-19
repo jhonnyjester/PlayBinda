@@ -12,16 +12,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Interfaces.SplitListener;
 import com.jhony.jester.play.Model.AllPlayers;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.JOINED;
-import static com.jhony.jester.play.Utils.Constants.WHICH;
 
 public class JoinActivity extends AppCompatActivity implements SplitListener {
     EditText gamePass;
@@ -31,6 +34,8 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
     ImageButton left, right;
     boolean isPass = true;
     Intent joinIntent;
+    JSONObject joinPayload;
+    ConnectionsClient connectionsClient;
     private int pos;
 
     @Override
@@ -45,8 +50,11 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
         gamePass = findViewById(R.id.game_pass);
         joinGame = findViewById(R.id.join_game);
 
+        joinPayload = new JSONObject();
+        connectionsClient = Nearby.getConnectionsClient(getApplicationContext());
+
         joinIntent = new Intent(JoinActivity.this, WaitingActivity.class);
-        joinIntent.putExtra(WHICH, JOINED);
+        joinIntent.putExtra(getResString(R.string.which), JOINED);
 
         joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,16 +68,17 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
                         new AllPlayers(DataSingleton.hosts.get(pos).getEndPointId(),
                                 DataSingleton.hosts.get(pos).getPlayerInfo()));
 
-                String joinPayload = "4" + "^" +
-                        DataSingleton.mUserName + "^" +
-                        DataSingleton.mUserDesc + "^" +
-                        DataSingleton.mUserLevel + "^"
-                        //send image string
-                        ;
-
-                Nearby.getConnectionsClient(getApplicationContext())
-                        .sendPayload(DataSingleton.hosts.get(pos).getEndPointId(),
-                                Payload.fromBytes(joinPayload.getBytes()));
+                try {
+                    joinPayload.put(getResString(R.string.payload_id), 4);
+                    joinPayload.put(getResString(R.string.user_name),DataSingleton.mUserName );
+                    joinPayload.put(getResString(R.string.user_desc),DataSingleton.mUserDesc );
+                    joinPayload.put(getResString(R.string.user_exp), DataSingleton.mUserLevel);
+                    connectionsClient
+                            .sendPayload(DataSingleton.hosts.get(pos).getEndPointId(),
+                                    Payload.fromBytes(joinPayload.toString().getBytes()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 DataSingleton.hostEndPoint = DataSingleton.hosts.get(pos).getEndPointId();
 
@@ -89,4 +98,9 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
             hostsName.setText(DataSingleton.hosts.get(pos).toString());
         }
     }
+
+    private String getResString(int id){
+        return getResources().getString(id);
+    }
+
 }

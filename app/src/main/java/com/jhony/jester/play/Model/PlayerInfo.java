@@ -9,10 +9,18 @@ import java.io.Serializable;
  */
 public class PlayerInfo implements Serializable {
 
-    private String mUserName, mUserDesc;
+    private String uniqueId, mUserName, mUserDesc;
     private int exp;
     private Uri userImage;
     private boolean status;
+
+    public PlayerInfo(String id, String name, String desc, int ex, Uri image){
+        this.uniqueId = id;
+        this.mUserName = name;
+        this.mUserDesc = desc;
+        this.exp = ex;
+        this.userImage = image;
+    }
 
     public PlayerInfo(String name, String desc, int ex, Uri image){
         this.mUserName = name;

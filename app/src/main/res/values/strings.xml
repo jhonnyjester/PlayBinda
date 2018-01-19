@@ -4,4 +4,19 @@
     <string name="host_game">HOST GAME</string>
     <string name="join_game">JOIN GAME</string>
 
+    <string name="which">which</string>
+
+    <string name="payload_id">mPayLoadId</string>
+    <string name="endpoint_id">mEndPointId</string>
+    <string name="user_id">mUniqueId</string>
+    <string name="user_name">mUserName</string>
+    <string name="user_desc">mUserDesc</string>
+    <string name="user_exp">mUserExp</string>
+    <string name="user_img">mUserImage</string>
+    <string name="password">mPassword</string>
+    <string name="trun_boolean">myTurn</string>
+
+    <string name="number">number</string>
+    <string name="status">status</string>
+    <string name="win_boolean">didWin</string>
 </resources>

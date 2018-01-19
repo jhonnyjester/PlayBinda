@@ -1,10 +1,8 @@
 package com.jhony.jester.play.Connections;
 
-import android.app.admin.DeviceAdminInfo;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
@@ -23,35 +21,22 @@ import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.jhony.jester.play.Interfaces.SplitListener;
-import com.jhony.jester.play.Model.AllPlayers;
+import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
 import com.jhony.jester.play.Utils.DataSingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by JAR on 15-01-2018.
  */
 
-public class EverythingNearby implements SplitListener{
+public class EverythingNearby implements SplitListener {
     private static final String TAG = "EverythingNearby";
+    int which;
     private Context context;
     private ConnectionsClient connectionsClient;
-    private AnalysePayload analysePayload;
-    private final PayloadCallback payloadCallback = new PayloadCallback() {
-        @Override
-        public void onPayloadReceived(String endPoint, Payload payload) {
-            Log.d("onPayLoadReceived", "RECEIVED");
-            String receivedPayloadString = new String(payload.asBytes());
-            analysePayload = new AnalysePayload(endPoint, receivedPayloadString, connectionsClient);
-//            Log.d("Payload Received", receivedPayloadString);
-//            Toast.makeText(context, "Payload recieved: " + receivedPayloadString, Toast.LENGTH_SHORT).show();
-            //  int otherPlayerClicked = Arrays.binarySearch(DataSingleton.numbers.toArray(), receivedPayloadString);
-        }
-
-        @Override
-        public void onPayloadTransferUpdate(String s, PayloadTransferUpdate payloadTransferUpdate) {
-            Log.d("onTransferUpdate", "TRANSFER UPDATE");
-        }
-    };
     private final ConnectionLifecycleCallback connectionLifecycleCallback = new ConnectionLifecycleCallback() {
         @Override
         public void onConnectionInitiated(String endPoint, ConnectionInfo connectionInfo) {
@@ -66,16 +51,22 @@ public class EverythingNearby implements SplitListener{
             switch (connectionResolution.getStatus().getStatusCode()) {
                 case ConnectionsStatusCodes.STATUS_OK:
                     Log.d("onConnectionResult", "CONNECTED");
-                    String initialPayload = " ";
-                    if (which.equals(Constants.HOST)) {
-                        initialPayload = "1" + "^" +
-                                DataSingleton.mUserName + "^" +
-                                DataSingleton.mUserDesc + "^" +
-                                DataSingleton.mUserLevel + "^" +
-                                //send image string
-                                "password";
+                    JSONObject initialPayload = null;
+                    if (which == (Constants.HOST)) {
+                        initialPayload = new JSONObject();
+                        try {
+                            initialPayload.put(getString(R.string.payload_id), 1);
+                            initialPayload.put(getString(R.string.app_name), DataSingleton.mUserName);
+                            initialPayload.put(getString(R.string.user_desc), DataSingleton.mUserDesc);
+                            initialPayload.put(getString(R.string.user_exp), DataSingleton.mUserLevel);
+                            initialPayload.put(getString(R.string.user_img), DataSingleton.mUserImage);
+                            initialPayload.put(getString(R.string.password), "Password");
+                            connectionsClient.sendPayload(endPoint, Payload.fromBytes(initialPayload.toString().getBytes()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
-                    connectionsClient.sendPayload(endPoint, Payload.fromBytes(initialPayload.getBytes()));
 
 
                     break;
@@ -120,10 +111,27 @@ public class EverythingNearby implements SplitListener{
             Log.d("EndPoint", "LOST");
         }
     };
-    private String payloadString = "Hey binda you got it right this time", which;
+    private AnalysePayload analysePayload;
+    private final PayloadCallback payloadCallback = new PayloadCallback() {
+        @Override
+        public void onPayloadReceived(String endPoint, Payload payload) {
+            Log.d("onPayLoadReceived", "RECEIVED");
+            String receivedPayloadString = new String(payload.asBytes());
+            analysePayload = new AnalysePayload(endPoint, receivedPayloadString, connectionsClient);
+//            Log.d("Payload Received", receivedPayloadString);
+//            Toast.makeText(context, "Payload recieved: " + receivedPayloadString, Toast.LENGTH_SHORT).show();
+            //  int otherPlayerClicked = Arrays.binarySearch(DataSingleton.numbers.toArray(), receivedPayloadString);
+        }
+
+        @Override
+        public void onPayloadTransferUpdate(String s, PayloadTransferUpdate payloadTransferUpdate) {
+            Log.d("onTransferUpdate", "TRANSFER UPDATE");
+        }
+    };
+    private String payloadString = "Hey binda you got it right this time";
     private String SERVICE_ID = "com.binda";
 
-    public EverythingNearby(Context context, String which) {
+    public EverythingNearby(Context context, int which) {
         this.context = context;
         this.connectionsClient = Nearby.getConnectionsClient(context);
         this.which = which;
@@ -179,16 +187,20 @@ public class EverythingNearby implements SplitListener{
 
     @Override
     public void onSplitCompleted(int id) {
-        if (id == 4){
+        if (id == 4) {
             //send payload
             payloadString = "4" + "^" +
                     DataSingleton.allPlayer.get(0).getPlayerInfo().getmUserName() + "^" +
-                    DataSingleton.allPlayer.get(0).getPlayerInfo().getmUserDesc()+ "^" +
+                    DataSingleton.allPlayer.get(0).getPlayerInfo().getmUserDesc() + "^" +
                     DataSingleton.allPlayer.get(0).getPlayerInfo().getExp();
 
             connectionsClient.sendPayload(
                     DataSingleton.endPoints,
                     Payload.fromBytes(payloadString.getBytes()));
         }
+    }
+
+    private String getString(int id) {
+        return context.getResources().getString(id);
     }
 }

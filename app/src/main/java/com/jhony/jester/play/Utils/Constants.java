@@ -6,15 +6,14 @@ package com.jhony.jester.play.Utils;
 
 public class Constants {
 
-    public static final String HOST = "host";
-    public static final String JOIN = "join";
-    public static final String JOINED = "joined";
-    public static final String WHICH = "which";
-    public static final String WHAT = "what";
-    public static final String GRID = "grid";
-    public static final String RECYCLER = "recycler";
-    public static final String ROTATION = "Rotation";
-    public static final String PORTRAIT = "Portrait";
-    public static final String LANDSCAPE = "Landscape";
-    public static int PORT = 9090;
+    public static final int
+            HOST = 10,
+            JOIN = 11,
+            JOINED = 12,
+            WHAT = 14,
+            GRID = 15,
+            RECYCLER = 16,
+            ROTATION = 17,
+            PORTRAIT = 18,
+            LANDSCAPE = 19;
 }

@@ -26,7 +26,6 @@ import com.jhony.jester.play.Utils.DataSingleton;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.HOST;
-import static com.jhony.jester.play.Utils.Constants.WHICH;
 import static com.jhony.jester.play.Utils.DataSingleton.allPlayer;
 import static com.jhony.jester.play.Utils.DataSingleton.isHost;
 import static com.jhony.jester.play.Utils.DataSingleton.mCurrentProgress;
@@ -86,7 +85,7 @@ public class SplashActivity extends AppCompatActivity{
         hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intent.putExtra(WHICH, HOST);
+                intent.putExtra(getResString(R.string.which), HOST);
                 isHost = true;
                 everythingNearby = new EverythingNearby(getApplicationContext(), Constants.HOST);
                 allPlayer.add(0,
@@ -150,6 +149,9 @@ public class SplashActivity extends AppCompatActivity{
 //        logo.setImageResource();
     }
 
+    private String getResString(int id){
+        return getResources().getString(id);
+    }
 
  /*   private void openDialog(String which) {
          CustomDialog.newInstance(getApplicationContext(), which).show(getSupportFragmentManager(), "hostOrJoin");

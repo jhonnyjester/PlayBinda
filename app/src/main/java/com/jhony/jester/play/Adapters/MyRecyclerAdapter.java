@@ -29,11 +29,11 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
    private int position;
    private Context context;
-   private String what, payload;
+   private int what;
    private View view;
     private BindaItemClickListener bindaItemClickListener;
 
-    public MyRecyclerAdapter(Context context, String what) {
+    public MyRecyclerAdapter(Context context, int what) {
         this.context = context;
         this.what = what;
     }
