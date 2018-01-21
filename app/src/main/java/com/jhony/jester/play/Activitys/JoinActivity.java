@@ -68,7 +68,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
                         return;
                     }
                 dataSingleton.getAllPlayer().add(0,
-                        new AllPlayers(dataSingleton.getHosts().get(pos).getEndPointId(),
+                        new AllPlayers(dataSingleton.getHosts().get(pos).getUniqueId(),
                                 dataSingleton.getHosts().get(pos).getPlayerInfo()));
 
                 try {
@@ -77,13 +77,13 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
                     joinPayload.put(getResString(R.string.user_desc), dataSingleton.getmUserDesc());
                     joinPayload.put(getResString(R.string.user_exp), dataSingleton.getmUserLevel());
                     connectionsClient
-                            .sendPayload(dataSingleton.getHosts().get(pos).getEndPointId(),
+                            .sendPayload(dataSingleton.getHosts().get(pos).getUniqueId(),
                                     Payload.fromBytes(joinPayload.toString().getBytes()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                dataSingleton.setHostEndPoint(dataSingleton.getHosts().get(pos).getEndPointId());
+                dataSingleton.setHostEndPoint(dataSingleton.getHosts().get(pos).getUniqueId());
 
                 startActivity(joinIntent);
                 finish();

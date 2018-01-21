@@ -113,7 +113,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
             try {
                 turnPayLoad.put(getResString(R.string.payload_id), 3);
                 turnPayLoad.put(getResString(R.string.trun_boolean), true);
-                connectionsClient.sendPayload(dataSingleton.getAllPlayer().get(turnCount).getEndPointId(),
+                connectionsClient.sendPayload(dataSingleton.getAllPlayer().get(turnCount).getUniqueId(),
                         Payload.fromBytes(turnPayLoad.toString().getBytes()));
             } catch (JSONException e) {
                 e.printStackTrace();

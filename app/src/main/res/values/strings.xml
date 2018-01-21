@@ -19,4 +19,25 @@
     <string name="number">number</string>
     <string name="status">status</string>
     <string name="win_boolean">didWin</string>
+
+    <string name="pref_name">Jhony Jester</string>
+    <string name="pref_name_key">name_key</string>
+    <string name="pref_name_summary">user_name</string>
+    <string name="pref_name_title">Player Name</string>
+
+    <string name="pref_rotation_key">rotation_key</string>
+    <string name="pref_rotation_summary">Change rotation pref</string>
+    <string name="pref_rotation_title">Rotation</string>
+
+    <string name="pref_music_key">music_key</string>
+    <string name="pref_music_summary">Put music on or off</string>
+    <string name="pref_music_title">Music</string>
+
+    <string name="pref_sound_key">sound_key</string>
+    <string name="pref_sound_summary">Put sound on or off</string>
+    <string name="pref_sound_title">Sound</string>
+
+    <string name="pref_vibration_key">vib_key</string>
+    <string name="pref_vibration_summary">Put vibration on or off</string>
+    <string name="pref_vibration_title">Vibration</string>
 </resources>

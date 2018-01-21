@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="@string/pref_name"
+        android:key="@string/pref_name_key"
+        android:summary="@string/pref_name_summary"
+        android:title="@string/pref_name_title" />
+
+    <PreferenceCategory android:title="Preferences">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_music_key"
+            android:summary="@string/pref_music_summary"
+            android:title="@string/pref_music_title" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_sound_key"
+            android:summary="@string/pref_sound_summary"
+            android:title="@string/pref_sound_title" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_vibration_key"
+            android:summary="@string/pref_vibration_summary"
+            android:title="@string/pref_vibration_title" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_rotation_key"
+            android:summary="@string/pref_rotation_summary"
+            android:title="@string/pref_rotation_title" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -32,9 +32,9 @@ import org.json.JSONObject;
  * Created by JAR on 15-01-2018.
  */
 
-public class EverythingNearby implements SplitListener {
+public class EverythingNearby {
     private static final String TAG = "EverythingNearby";
-    int which;
+    private int which;
     private Context context;
     private ConnectionsClient connectionsClient;
     private DataSingleton dataSingleton;
@@ -113,12 +113,12 @@ public class EverythingNearby implements SplitListener {
             Log.d("EndPoint", "LOST");
         }
     };
-    private AnalysePayload analysePayload;
+    private AnalysePayload analysePayload;private String receivedPayloadString;
     private final PayloadCallback payloadCallback = new PayloadCallback() {
         @Override
         public void onPayloadReceived(String endPoint, Payload payload) {
             Log.d("onPayLoadReceived", "RECEIVED");
-            String receivedPayloadString = new String(payload.asBytes());
+             receivedPayloadString = new String(payload.asBytes());
             analysePayload = new AnalysePayload(endPoint, receivedPayloadString, connectionsClient);
 //            Log.d("Payload Received", receivedPayloadString);
 //            Toast.makeText(context, "Payload recieved: " + receivedPayloadString, Toast.LENGTH_SHORT).show();
@@ -130,8 +130,8 @@ public class EverythingNearby implements SplitListener {
             Log.d("onTransferUpdate", "TRANSFER UPDATE");
         }
     };
-    private String payloadString = "Hey binda you got it right this time";
-    private String SERVICE_ID = "com.binda";
+
+    private final String SERVICE_ID = "com.play.binda.jar";
 
     public EverythingNearby(Context context, int which) {
         this.context = context;
@@ -188,20 +188,6 @@ public class EverythingNearby implements SplitListener {
                 });
     }
 
-    @Override
-    public void onSplitCompleted(int id) {
-        if (id == 4) {
-            //send payload
-            payloadString = "4" + "^" +
-                    dataSingleton.getAllPlayer().get(0).getPlayerInfo().getmUserName() + "^" +
-                    dataSingleton.getAllPlayer().get(0).getPlayerInfo().getmUserDesc() + "^" +
-                    dataSingleton.getAllPlayer().get(0).getPlayerInfo().getExp();
-
-            connectionsClient.sendPayload(
-                    dataSingleton.getEndPoints(),
-                    Payload.fromBytes(payloadString.getBytes()));
-        }
-    }
 
     private String getString(int id) {
         return context.getResources().getString(id);

@@ -1,7 +1,5 @@
 package com.jhony.jester.play.Model;
 
-import android.net.Uri;
-
 import java.io.Serializable;
 
 /**
@@ -9,20 +7,20 @@ import java.io.Serializable;
  */
 public class PlayerInfo implements Serializable {
 
-    private String uniqueId, mUserName, mUserDesc;
+    private String endpointId, mUserName, mUserDesc;
     private int exp;
-    private Uri userImage;
+    private String userImage;
     private boolean status;
 
-    public PlayerInfo(String id, String name, String desc, int ex, Uri image){
-        this.uniqueId = id;
+    public PlayerInfo(String id, String name, String desc, int ex, String image){
+        this.endpointId = id;
         this.mUserName = name;
         this.mUserDesc = desc;
         this.exp = ex;
         this.userImage = image;
     }
 
-    public PlayerInfo(String name, String desc, int ex, Uri image){
+    public PlayerInfo(String name, String desc, int ex, String image){
         this.mUserName = name;
         this.mUserDesc = desc;
         this.userImage = image;
@@ -33,6 +31,10 @@ public class PlayerInfo implements Serializable {
         this.mUserName = name;
         this.mUserDesc = desc;
         this.exp = ex;
+    }
+
+    public String getEndpointId() {
+        return endpointId;
     }
 
     public String getmUserName() {
@@ -47,7 +49,7 @@ public class PlayerInfo implements Serializable {
         return exp;
     }
 
-    public Uri getUserImage() {
+    public String getUserImage() {
         return userImage;
     }
 
