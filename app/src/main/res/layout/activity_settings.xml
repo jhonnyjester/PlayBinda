@@ -43,7 +43,8 @@
                 android:id="@+id/user_image_sett"
                 android:layout_width="match_parent"
                 android:layout_height="175dp"
-                android:layout_marginBottom="8dp"
+                android:layout_alignEnd="@+id/user_name_sett"
+                android:layout_alignParentTop="true"
                 android:layout_marginTop="8dp"
                 android:padding="5dp"
                 android:src="@drawable/vector" />

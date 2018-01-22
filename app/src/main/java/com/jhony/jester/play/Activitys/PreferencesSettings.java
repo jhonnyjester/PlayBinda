@@ -12,13 +12,14 @@ public class PreferencesSettings extends Preferences {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_preferences_settings);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //loading settings fragment
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content, new MyPreferenceFragment()).commit();
     }
 
-    public static class MyPreferenceFragment extends PreferenceFragment{
+    public static class MyPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

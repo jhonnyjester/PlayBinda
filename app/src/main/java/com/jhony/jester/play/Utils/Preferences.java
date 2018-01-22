@@ -21,6 +21,7 @@ public abstract class Preferences extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getdelegate().installViewFactory();
         getdelegate().onCreate(savedInstanceState);
+
         super.onCreate(savedInstanceState);
     }
 

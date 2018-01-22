@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference
+        android:icon="@drawable/ic_account_circle_black_24dp"
         android:defaultValue="@string/pref_name"
         android:key="@string/pref_name_key"
         android:summary="@string/pref_name_summary"
@@ -8,24 +9,38 @@
 
     <PreferenceCategory android:title="Preferences">
         <SwitchPreference
+            android:icon="@drawable/ic_music_note_black_24dp"
             android:defaultValue="true"
             android:key="@string/pref_music_key"
             android:summary="@string/pref_music_summary"
             android:title="@string/pref_music_title" />
         <SwitchPreference
+            android:icon="@drawable/ic_sound"
             android:defaultValue="false"
             android:key="@string/pref_sound_key"
             android:summary="@string/pref_sound_summary"
             android:title="@string/pref_sound_title" />
         <SwitchPreference
+            android:icon="@drawable/ic_vibration_black_24dp"
             android:defaultValue="true"
             android:key="@string/pref_vibration_key"
             android:summary="@string/pref_vibration_summary"
             android:title="@string/pref_vibration_title" />
         <SwitchPreference
+            android:icon="@drawable/ic_screen_rotation_black_24dp"
             android:defaultValue="true"
             android:key="@string/pref_rotation_key"
             android:summary="@string/pref_rotation_summary"
             android:title="@string/pref_rotation_title" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="need one title">
+        <Preference android:title="about"
+            android:icon="@drawable/ic_info_outline_black_24dp"
+            android:summary="about the app and the developer and open source licences put git link"/>
+        <Preference android:title="Feedback"
+            android:icon="@drawable/ic_feedback_black_24dp"
+            android:summary="Open G-forms to take in the feedback for advanced"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>

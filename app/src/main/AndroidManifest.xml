@@ -46,8 +46,8 @@
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".Activitys.JoinActivity" />
         <activity android:name=".Activitys.AboutActivity" />
-        <activity android:name=".Activitys.PreferenceActivity" />
-        <activity android:name=".Activitys.PreferencesSettings"></activity>
+        <activity android:name=".Activitys.PreferencesSettings"
+            android:theme="@style/FullscreenTheme"/>
     </application>
 
 </manifest>
