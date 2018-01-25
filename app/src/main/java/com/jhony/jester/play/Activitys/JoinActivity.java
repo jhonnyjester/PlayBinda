@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.Payload;
+import com.jhony.jester.play.Connections.AnalysePayload;
 import com.jhony.jester.play.Interfaces.SplitListener;
 import com.jhony.jester.play.Model.AllPlayers;
 import com.jhony.jester.play.Model.GsonModel;
@@ -37,6 +38,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
     Intent joinIntent;
     JSONObject joinPayload;
     ConnectionsClient connectionsClient;
+    AnalysePayload analysePayload;
     DataSingleton dataSingleton;
     private int pos;
 
@@ -56,6 +58,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
 
         joinPayload = new JSONObject();
         connectionsClient = Nearby.getConnectionsClient(getApplicationContext());
+        analysePayload.setSplitListener(this);
 
         joinIntent = new Intent(JoinActivity.this, WaitingActivity.class);
         joinIntent.putExtra(getResString(R.string.which), JOINED);
@@ -102,7 +105,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
     @Override
     public void onSplitCompleted(GsonModel gsonModel) {
         //show the hosts
-        if (gsonModel.getPayloadId().equals("1")) {
+        if (gsonModel.getPayloadId() == 1) {
             pos = 0;
             hostsName.setText(dataSingleton.getHosts().get(pos).toString());
             if (!gsonModel.getPassword().isEmpty()){

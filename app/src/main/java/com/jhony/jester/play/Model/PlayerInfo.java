@@ -21,6 +21,14 @@ public class PlayerInfo implements Serializable {
         this.mPassword = pass;
     }
 
+    public PlayerInfo(String endId, String name, String desc, int ex, String image){
+        this.endpointId = endId;
+        this.mUserName = name;
+        this.mUserDesc = desc;
+        this.exp = ex;
+        this.userImage = image;
+    }
+
     public PlayerInfo(String name, String desc, int ex, String image){
         this.mUserName = name;
         this.mUserDesc = desc;
@@ -56,5 +64,9 @@ public class PlayerInfo implements Serializable {
 
     public boolean isStatus() {
         return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

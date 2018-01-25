@@ -20,6 +20,7 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
+import com.jhony.jester.play.Connections.AnalysePayload;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
 
@@ -42,6 +43,7 @@ public class WaitingActivity extends AppCompatActivity {
     Button mReady;
     RecyclerView mRecycler;
     MyRecyclerAdapter myRecyclerAdapter;
+
     Animation slideUp, slideDown, spin;
     ConstraintLayout mHostCL, mChatCL;
     ConnectionsClient connectionsClient;
@@ -87,6 +89,7 @@ public class WaitingActivity extends AppCompatActivity {
         mRecycler.setItemAnimator(new DefaultItemAnimator());
         mRecycler.setAdapter(myRecyclerAdapter);
         connectionsClient = Nearby.getConnectionsClient(this);
+
         switch (getIntent().getIntExtra(getResString(R.string.which), 0)) {
             case HOST:
                 mHostCL.setVisibility(View.GONE);

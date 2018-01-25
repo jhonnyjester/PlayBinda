@@ -8,11 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
+import com.jhony.jester.play.Connections.AnalysePayload;
 import com.jhony.jester.play.Interfaces.BindaItemClickListener;
 import com.jhony.jester.play.Interfaces.SplitListener;
 import com.jhony.jester.play.Model.GsonModel;
@@ -48,7 +50,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
     int d1Count = 0, d2Count = 0;
     int column;
     int bindaCount = 0;
-
+    AnalysePayload analysePayload;
     JSONObject numPayload;
     JSONObject turnPayLoad;
     JSONObject pickerPayload;
@@ -105,6 +107,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         mRecycler.setItemAnimator(new DefaultItemAnimator());
         mRecycler.setAdapter(myRecyclerAdapter);
         myRecyclerAdapter.setListener(this);
+        analysePayload.setSplitListener(this);
 
         if (dataSingleton.isHost()) {
             worryAboutTurns();
@@ -119,6 +122,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         else {
             try {
                 turnPayLoad.put(getResString(R.string.payload_id), 3);
+                turnPayLoad.put(getResString(R.string.user_name), dataSingleton.getAllPlayer().get(turnCount).getPlayerInfo().getmUserName());
                 turnPayLoad.put(getResString(R.string.user_id), dataSingleton.getAllPlayer().get(turnCount).getUniqueId());
                 playerName.setText(dataSingleton.getAllPlayer().get(turnCount).getPlayerInfo().getmUserName());
                 connectionsClient.sendPayload(dataSingleton.getEndPoints(),
@@ -227,14 +231,29 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
 
     @Override
     public void onSplitCompleted(GsonModel gsonModel) {
-        if (gsonModel.getPayloadId().equals("2")) {
-            number.setText(dataSingleton.getCurrentNumber());
-            pos = Arrays.binarySearch(dataSingleton.getNumbers().toArray(), dataSingleton.getCurrentNumber());
-            dataSingleton.getIsTicked().set(pos, true);
+        switch (gsonModel.getPayloadId()) {
+            case 2:
+                number.setText(dataSingleton.getCurrentNumber());
+                pos = Arrays.binarySearch(dataSingleton.getNumbers().toArray(), dataSingleton.getCurrentNumber());
+                dataSingleton.getIsTicked().set(pos, true);
 
-            if (dataSingleton.isHost()) {
-                worryAboutTurns();
-            }
+                if (dataSingleton.isHost()) {
+                    worryAboutTurns();
+                }
+                break;
+            case 3:
+                if (gsonModel.getPlayerId().equals(dataSingleton.getMyId())) {
+                    dataSingleton.setMyTurn(true);
+                    playerName.setText("It's Your Turn");
+                } else {
+                    playerName.setText(gsonModel.getPlayerName());
+                }
+                break;
+            case 5:
+                myRecyclerAdapter.notifyDataSetChanged();
+                break;
+            case 6:
+                break;
         }
     }
 

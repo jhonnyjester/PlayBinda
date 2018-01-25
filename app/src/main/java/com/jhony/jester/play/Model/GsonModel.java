@@ -7,21 +7,20 @@ package com.jhony.jester.play.Model;
 public class GsonModel {
 
     private String
-            payloadId,
             playerId,
             playerName,
             playerDesc,
-            playerExp,
             playerImage,
             password;
 
     private boolean
-            turnBool,
             statusBool,
             winnerBool;
 
     private int
-            num;
+            num,
+            payloadId,
+            playerExp;
 
     public GsonModel() {
 
@@ -39,11 +38,11 @@ public class GsonModel {
         this.password = password;
     }
 
-    public String getPayloadId() {
+    public int getPayloadId() {
         return payloadId;
     }
 
-    public void setPayloadId(String payloadId) {
+    public void setPayloadId(int payloadId) {
         this.payloadId = payloadId;
     }
 
@@ -71,11 +70,11 @@ public class GsonModel {
         this.playerDesc = playerDesc;
     }
 
-    public String getPlayerExp() {
+    public int getPlayerExp() {
         return playerExp;
     }
 
-    public void setPlayerExp(String playerExp) {
+    public void setPlayerExp(int playerExp) {
         this.playerExp = playerExp;
     }
 
@@ -85,14 +84,6 @@ public class GsonModel {
 
     public void setPlayerImage(String playerImage) {
         this.playerImage = playerImage;
-    }
-
-    public boolean isTurnBool() {
-        return turnBool;
-    }
-
-    public void setTurnBool(boolean turnBool) {
-        this.turnBool = turnBool;
     }
 
     public boolean isStatusBool() {
