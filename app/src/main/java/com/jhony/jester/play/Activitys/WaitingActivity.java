@@ -90,7 +90,6 @@ public class WaitingActivity extends AppCompatActivity {
         switch (getIntent().getIntExtra(getResString(R.string.which), 0)) {
             case HOST:
                 mHostCL.setVisibility(View.GONE);
-
                 break;
 
             case JOINED:
@@ -98,7 +97,6 @@ public class WaitingActivity extends AppCompatActivity {
                 mHostCL.setVisibility(View.GONE);
                 listViewCompat.setClickable(false);
                 mReady.setText("YES! LET'S GO!");
-
                 break;
             default:
                 finish();

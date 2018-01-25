@@ -7,17 +7,18 @@ import java.io.Serializable;
  */
 public class PlayerInfo implements Serializable {
 
-    private String endpointId, mUserName, mUserDesc;
+    private String endpointId, mUserName, mUserDesc, mPassword;
     private int exp;
     private String userImage;
     private boolean status;
 
-    public PlayerInfo(String id, String name, String desc, int ex, String image){
-        this.endpointId = id;
+    public PlayerInfo(String endId, String name, String desc, int ex, String image, String pass){
+        this.endpointId = endId;
         this.mUserName = name;
         this.mUserDesc = desc;
         this.exp = ex;
         this.userImage = image;
+        this.mPassword = pass;
     }
 
     public PlayerInfo(String name, String desc, int ex, String image){

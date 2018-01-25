@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.jhony.jester.play.Connections.EverythingNearby;
 import com.jhony.jester.play.Model.AllPlayers;
 import com.jhony.jester.play.Model.PlayerInfo;
@@ -27,7 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.HOST;
 
-public class SplashActivity extends AppCompatActivity{
+public class SplashActivity extends AppCompatActivity {
 
     public static final String TAG = "Splash Activity";
     TextView userName, currentProgress, levelUpTarget, hostGame, joinGame, userLevel;
@@ -48,14 +49,14 @@ public class SplashActivity extends AppCompatActivity{
         dataSingleton = DataSingleton.getOneInstance();
 
         userName = findViewById(R.id.user_name);
-        currentProgress =  findViewById(R.id.current_progress_tv);
-        levelUpTarget =  findViewById(R.id.lvl_up_target);
+        currentProgress = findViewById(R.id.current_progress_tv);
+        levelUpTarget = findViewById(R.id.lvl_up_target);
         hostGame = findViewById(R.id.host_tv);
         joinGame = findViewById(R.id.join_tv);
         userLevel = findViewById(R.id.exp_tv);
-        settings =  findViewById(R.id.settings_btn);
-        userImage =  findViewById(R.id.user_image);
-        logo =  findViewById(R.id.circleImageView);
+        settings = findViewById(R.id.settings_btn);
+        userImage = findViewById(R.id.user_image);
+        logo = findViewById(R.id.circleImageView);
         progressBar = findViewById(R.id.progressBar);
 
 //        up = new AnimationUtils().loadAnimation(getApplicationContext(), R.anim.slide_up);
@@ -80,12 +81,15 @@ public class SplashActivity extends AppCompatActivity{
         hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO: 25-01-2018 open a dialog for game size and password
                 intent.putExtra(getResString(R.string.which), HOST);
                 dataSingleton.setHost(true);
                 everythingNearby = new EverythingNearby(getApplicationContext(), Constants.HOST);
+                // TODO: 25-01-2018 generate unique id and store it in datasingleton.myId
                 dataSingleton.getAllPlayer().add(0,
                         new AllPlayers(
                                 new PlayerInfo(dataSingleton.getmUserName(),
+                                        //add unique id
                                         //also add image
                                         dataSingleton.getmUserDesc(),
                                         dataSingleton.getmUserLevel())));
@@ -120,7 +124,7 @@ public class SplashActivity extends AppCompatActivity{
 
     private void showEditDialog() {
         dialog = new MaterialDialog.Builder(this);
-        dialog.title("User Name")
+        dialog.title("Player Name")
                 .titleColor(getResources().getColor(R.color.accent))
                 .input(dataSingleton.getmUserName(), null, true, new MaterialDialog.InputCallback() {
                     @Override
@@ -138,13 +142,12 @@ public class SplashActivity extends AppCompatActivity{
         currentProgress.setText(String.valueOf(dataSingleton.getmCurrentProgress()));
         levelUpTarget.setText(String.valueOf(dataSingleton.getmLevelUpTarget()));
         progressBar.setProgress(75);
-        progressBar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
         userLevel.setText(String.valueOf(dataSingleton.getmUserLevel()));
-        userImage.setImageResource(R.drawable.vector);
+        Glide.with(getApplicationContext()).load(R.drawable.vector).into(userImage);
 //        logo.setImageResource();
     }
 
-    private String getResString(int id){
+    private String getResString(int id) {
         return getResources().getString(id);
     }
 

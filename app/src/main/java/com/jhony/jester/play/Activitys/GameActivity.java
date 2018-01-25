@@ -15,6 +15,7 @@ import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
 import com.jhony.jester.play.Interfaces.BindaItemClickListener;
 import com.jhony.jester.play.Interfaces.SplitListener;
+import com.jhony.jester.play.Model.GsonModel;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
 
@@ -29,24 +30,29 @@ import static com.jhony.jester.play.Utils.Constants.GRID;
 
 public class GameActivity extends AppCompatActivity implements BindaItemClickListener, SplitListener {
 
-    JSONObject numPayload;
-    MyRecyclerAdapter myRecyclerAdapter;
-    RecyclerView mRecycler;
+    TextView
+            number,
+            playerName;
     TextView[] binda = new TextView[5];
     Animation bounce, spin;
-    TextView number;
+    RecyclerView mRecycler;
+    DataSingleton dataSingleton;
+    MyRecyclerAdapter myRecyclerAdapter;
     ConnectionsClient connectionsClient;
+
     int playerSize;
-    JSONObject winnerPayload;
     int turnCount = -1;
     int pos;
     int gameSize;
-    DataSingleton dataSingleton;
     int[] rowCount, columnCount;
     int d1Count = 0, d2Count = 0;
     int column;
     int bindaCount = 0;
+
+    JSONObject numPayload;
     JSONObject turnPayLoad;
+    JSONObject pickerPayload;
+    JSONObject winnerPayload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         turnPayLoad = new JSONObject();
         numPayload = new JSONObject();
         winnerPayload = new JSONObject();
+        pickerPayload = new JSONObject();
 
         dataSingleton.setDidWin(false);
         playerSize = dataSingleton.getAllPlayer().size();
@@ -112,9 +119,11 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         else {
             try {
                 turnPayLoad.put(getResString(R.string.payload_id), 3);
-                turnPayLoad.put(getResString(R.string.trun_boolean), true);
-                connectionsClient.sendPayload(dataSingleton.getAllPlayer().get(turnCount).getUniqueId(),
+                turnPayLoad.put(getResString(R.string.user_id), dataSingleton.getAllPlayer().get(turnCount).getUniqueId());
+                playerName.setText(dataSingleton.getAllPlayer().get(turnCount).getPlayerInfo().getmUserName());
+                connectionsClient.sendPayload(dataSingleton.getEndPoints(),
                         Payload.fromBytes(turnPayLoad.toString().getBytes()));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -174,7 +183,6 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
                 try {
                     winnerPayload.put(getResString(R.string.payload_id), 6);
                     winnerPayload.put(getResString(R.string.user_id), dataSingleton.getMyId());
-                    winnerPayload.put(getResString(R.string.win_boolean), true);
                     connectionsClient.sendPayload(dataSingleton.getEndPoints(),
                             Payload.fromBytes(winnerPayload.toString().getBytes()));
                 } catch (JSONException e) {
@@ -184,14 +192,13 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
             try {
                 winnerPayload.put(getResString(R.string.payload_id), 6);
                 winnerPayload.put(getResString(R.string.user_id), dataSingleton.getMyId());
-                winnerPayload.put(getResString(R.string.win_boolean), true);
                 connectionsClient.sendPayload(dataSingleton.getHostEndPoint(),
                         Payload.fromBytes(winnerPayload.toString().getBytes()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            //open winning page
+// TODO: 25-01-2018 open winning page 
 
         }
     }
@@ -208,7 +215,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
 
         try {
             numPayload.put(getResString(R.string.payload_id), 2);
-            numPayload.put(getResString(R.string.number), dataSingleton.getNumbers().get(position));
+            numPayload.put(getResString(R.string.num), dataSingleton.getNumbers().get(position));
             connectionsClient.
                     sendPayload(dataSingleton.getHostEndPoint(),
                             Payload.fromBytes(numPayload.toString().getBytes()));
@@ -219,8 +226,8 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
     }
 
     @Override
-    public void onSplitCompleted(int id) {
-        if (id == 2) {
+    public void onSplitCompleted(GsonModel gsonModel) {
+        if (gsonModel.getPayloadId().equals("2")) {
             number.setText(dataSingleton.getCurrentNumber());
             pos = Arrays.binarySearch(dataSingleton.getNumbers().toArray(), dataSingleton.getCurrentNumber());
             dataSingleton.getIsTicked().set(pos, true);

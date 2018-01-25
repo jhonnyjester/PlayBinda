@@ -68,10 +68,10 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                         holder.mWaiting.setVisibility(View.VISIBLE);
                 } else holder.mWaiting.setVisibility(View.GONE);
                 if (position % 2 == 0) {
-                    holder.mPlayerStatus.setImageResource(R.drawable.ic_ready);
-                } else {
                     holder.mPlayerStatus.setImageResource(R.drawable.ic_not_ready);
                     holder.mPlayerStatus.setRotation(45);
+                } else {
+                    holder.mPlayerStatus.setImageResource(R.drawable.ic_ready);
                 }
 
                 holder.mContainer.setOnLongClickListener(new View.OnLongClickListener() {
@@ -84,7 +84,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                 break;
 
             case GRID:
-                if (!dataSingleton.getIsTicked().get(position)) {
+                if (dataSingleton.getIsTicked().get(position)) {
                     holder.mGridContainer.setBackground(context.getResources().getDrawable(R.drawable.gradient_red));
                     holder.rowTv.setTextColor(context.getResources().getColor(R.color.white));
                 }

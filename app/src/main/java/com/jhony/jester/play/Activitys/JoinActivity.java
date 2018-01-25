@@ -16,6 +16,7 @@ import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Interfaces.SplitListener;
 import com.jhony.jester.play.Model.AllPlayers;
+import com.jhony.jester.play.Model.GsonModel;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
 
@@ -32,7 +33,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
     TextView hostsName;
     Button joinGame;
     ImageButton left, right;
-    boolean isPass = true;
+    boolean isPass = false;
     Intent joinIntent;
     JSONObject joinPayload;
     ConnectionsClient connectionsClient;
@@ -59,6 +60,10 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
         joinIntent = new Intent(JoinActivity.this, WaitingActivity.class);
         joinIntent.putExtra(getResString(R.string.which), JOINED);
 
+        joinGame.setClickable(false);
+        joinGame.setBackgroundColor(getResources().getColor(R.color.gray));
+        joinGame.setText("Loading...");
+
         joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +81,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
                     joinPayload.put(getResString(R.string.user_name), dataSingleton.getmUserName());
                     joinPayload.put(getResString(R.string.user_desc), dataSingleton.getmUserDesc());
                     joinPayload.put(getResString(R.string.user_exp), dataSingleton.getmUserLevel());
+                    // TODO: 25-01-2018 add image string
                     connectionsClient
                             .sendPayload(dataSingleton.getHosts().get(pos).getUniqueId(),
                                     Payload.fromBytes(joinPayload.toString().getBytes()));
@@ -83,7 +89,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
                     e.printStackTrace();
                 }
 
-                dataSingleton.setHostEndPoint(dataSingleton.getHosts().get(pos).getUniqueId());
+                dataSingleton.setHostEndPoint(dataSingleton.getHosts().get(pos).getPlayerInfo().getEndpointId());
 
                 startActivity(joinIntent);
                 finish();
@@ -94,11 +100,16 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
 
 
     @Override
-    public void onSplitCompleted(int id) {
+    public void onSplitCompleted(GsonModel gsonModel) {
         //show the hosts
-        if (id == 1) {
+        if (gsonModel.getPayloadId().equals("1")) {
             pos = 0;
             hostsName.setText(dataSingleton.getHosts().get(pos).toString());
+            if (!gsonModel.getPassword().isEmpty()){
+                isPass = true;
+            }
+            joinGame.setClickable(true);
+            joinGame.setBackground(getResources().getDrawable(R.drawable.button_background));
         }
     }
 

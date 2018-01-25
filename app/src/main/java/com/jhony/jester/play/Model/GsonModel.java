@@ -12,7 +12,8 @@ public class GsonModel {
             playerName,
             playerDesc,
             playerExp,
-            playerImage;
+            playerImage,
+            password;
 
     private boolean
             turnBool,
@@ -28,6 +29,14 @@ public class GsonModel {
 
     public String toString() {
         return " ";
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPayloadId() {

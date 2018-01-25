@@ -58,7 +58,8 @@ public class EverythingNearby {
                         initialPayload = new JSONObject();
                         try {
                             initialPayload.put(getString(R.string.payload_id), 1);
-                            initialPayload.put(getString(R.string.app_name), dataSingleton.getmUserName());
+                            initialPayload.put(getString(R.string.user_id), dataSingleton.getMyId());
+                            initialPayload.put(getString(R.string.user_name), dataSingleton.getmUserName());
                             initialPayload.put(getString(R.string.user_desc), dataSingleton.getmUserDesc());
                             initialPayload.put(getString(R.string.user_exp), dataSingleton.getmUserLevel());
                             initialPayload.put(getString(R.string.user_img), dataSingleton.getmUserImage());
