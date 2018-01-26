@@ -40,4 +40,7 @@
     <string name="pref_vibration_key">vib_key</string>
     <string name="pref_vibration_summary">Put vibration on or off</string>
     <string name="pref_vibration_title">Vibration</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

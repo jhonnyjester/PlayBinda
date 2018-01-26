@@ -30,7 +30,6 @@ import static com.jhony.jester.play.Utils.Constants.HOST;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static final String TAG = "Splash Activity";
     TextView userName, currentProgress, levelUpTarget, hostGame, joinGame, userLevel;
     ProgressBar progressBar;
     ImageButton settings;
