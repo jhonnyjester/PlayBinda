@@ -101,22 +101,6 @@
     </FrameLayout>
 
     <FrameLayout
-        android:visibility="gone"
-        android:id="@+id/gallery_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/activity_horizontal_margin">
-
-        <ListView
-            android:id="@+id/gallery_listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </ListView>
-
-    </FrameLayout>
-
-    <FrameLayout
         android:id="@+id/characters_frame"
         android:visibility="gone"
         android:layout_width="match_parent"

@@ -1,43 +1,39 @@
 package com.jhony.jester.play.Activitys;
 
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
+import android.preference.Preference;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.Toast;
 
+import com.jhony.jester.play.Fragments.MyPreferenceFragment;
 import com.jhony.jester.play.R;
+import com.jhony.jester.play.Utils.Constants;
+import com.jhony.jester.play.Utils.FileUtils;
 import com.jhony.jester.play.Utils.Preferences;
-
-import java.util.Collections;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PreferencesSettings extends Preferences {
+public class PreferencesSettings extends Preferences  {
 
     private static final int CAMERA_REQUEST_CODE = 789;
     private static final int GALLERY_REQUEST_CODE = 456;
     private static final String EXTERNAL_DIRECTORY = "PlayBinda/profilePic";
     private final String TAG = "PreferencesSettings";
     LinearLayout cameraLayout, galleryLayout, characterLayout;
-    FrameLayout cameraFrame, galleryFrame, characterFrame;
+    FrameLayout characterFrame;
     BottomSheetDialog dialog;
-    BottomSheetBehavior behavior;
     CircleImageView playerImage;
     Button signOut;
-    ListView galleryListView;
-    ImageButton editImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +42,6 @@ public class PreferencesSettings extends Preferences {
 
         playerImage = findViewById(R.id.user_image_sett);
         signOut = findViewById(R.id.sign_out_sett);
-        editImage = findViewById(R.id.image_edit);
-
 
         //loading settings fragment
         getFragmentManager().beginTransaction().replace(R.id.content, new MyPreferenceFragment()).commit();
@@ -63,17 +57,10 @@ public class PreferencesSettings extends Preferences {
         playerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editImage.performClick();
-            }
-        });
-
-        editImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //open image picker
                 openPicker();
             }
         });
+
     }
 
     private void openPicker() {
@@ -82,14 +69,10 @@ public class PreferencesSettings extends Preferences {
         View view = getLayoutInflater().inflate(R.layout.bottom_sheets, null);
         //bottomSheetsLayout = view.findViewById(R.id.bottom_sheet);
 
-        galleryListView = view.findViewById(R.id.gallery_listview);
-
         cameraLayout = view.findViewById(R.id.camera_layout);
         galleryLayout = view.findViewById(R.id.gallery_layout);
         characterLayout = view.findViewById(R.id.characters_layout);
 
-        cameraFrame = view.findViewById(R.id.camera_frame);
-        galleryFrame = view.findViewById(R.id.gallery_frame);
         characterFrame = view.findViewById(R.id.characters_frame);
 
         dialog = new BottomSheetDialog(this);
@@ -99,57 +82,53 @@ public class PreferencesSettings extends Preferences {
         cameraLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cameraFrame.setVisibility(View.VISIBLE);
-                galleryFrame.setVisibility(View.GONE);
                 characterFrame.setVisibility(View.GONE);
-
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+                }
             }
         });
 
         galleryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cameraFrame.setVisibility(View.GONE);
-                galleryFrame.setVisibility(View.VISIBLE);
                 characterFrame.setVisibility(View.GONE);
                 Intent intent = new Intent();
-                intent.setType("image");
+                intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                List<ResolveInfo> launchables = getPackageManager().queryIntentActivities(intent, 0);
-                Collections.sort(launchables, new ResolveInfo.DisplayNameComparator(getPackageManager()));
-                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), R.layout.players_single_item, R.id.user_name_players, launchables);
-                galleryListView.setAdapter(arrayAdapter);
-
-
-//                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+                startActivityForResult(intent, GALLERY_REQUEST_CODE);
             }
         });
 
         characterLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cameraFrame.setVisibility(View.GONE);
-                galleryFrame.setVisibility(View.GONE);
                 characterFrame.setVisibility(View.VISIBLE);
-
             }
         });
-
-
-
-    /*    Intent intent = new Intent();
-        intent.setType("image*//*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);*/
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == CAMERA_REQUEST_CODE) {
-            Log.d(TAG, "onActivityResult: " + data.getData());
-        }
-
+        dialog.cancel();
+        if (resultCode == RESULT_OK && data != null) {
+            if (requestCode == CAMERA_REQUEST_CODE) {
+                Log.d(TAG, "onActivityResult: Camera     " + data.getData());
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) (extras != null ? extras.get("data") : null);
+                if (imageBitmap != null) {
+                    playerImage.setImageBitmap(imageBitmap);
+                } else Toast.makeText(this, "Couldn't Capture Image", Toast.LENGTH_SHORT).show();
+            }
+            if (requestCode == GALLERY_REQUEST_CODE) {
+                Log.d(TAG, "onActivityResult: Gallery      " + data.getData());
+                Uri selectedImageUri = data.getData();
+                String selectedImagePath = FileUtils.getPath(getApplicationContext(), selectedImageUri);
+                playerImage.setImageURI(Uri.parse(selectedImagePath));
+            }
+        } else Log.d(TAG, "onActivityResult: NULL");
     }
 
     @Override
@@ -157,12 +136,7 @@ public class PreferencesSettings extends Preferences {
         super.onBackPressed();
     }
 
-    public static class MyPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
-        }
-    }
+
+
 }
 

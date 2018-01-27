@@ -16,4 +16,11 @@ public class Constants {
             ROTATION = 17,
             PORTRAIT = 18,
             LANDSCAPE = 19;
+
+    public static final String
+            SP_NAME_KEY = "name_key",
+            SP_MUSIC_KEY = "music_key",
+            SP_SOUND_KEY = "sound_key",
+            SP_VIB_KEY = "vib_key",
+            SP_ROTATION_KEY = "rotation_key";
 }
