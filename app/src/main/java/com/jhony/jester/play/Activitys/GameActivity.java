@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
@@ -16,7 +15,6 @@ import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
 import com.jhony.jester.play.Connections.AnalysePayload;
 import com.jhony.jester.play.Interfaces.BindaItemClickListener;
-import com.jhony.jester.play.Interfaces.SplitListener;
 import com.jhony.jester.play.Model.GsonModel;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
@@ -30,7 +28,7 @@ import java.util.Collections;
 import static com.jhony.jester.play.Utils.Constants.GRID;
 
 
-public class GameActivity extends AppCompatActivity implements BindaItemClickListener, SplitListener {
+public class GameActivity extends AppCompatActivity implements BindaItemClickListener {
 
     TextView
             number,
@@ -85,6 +83,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         binda[3] = findViewById(R.id.d);
         binda[4] = findViewById(R.id.a);
         number = findViewById(R.id.number);
+        playerName = findViewById(R.id.player_name);
 
 
         dataSingleton.getNumbers().clear();
@@ -102,12 +101,12 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
 
         Collections.shuffle(dataSingleton.getNumbers());
 
+        analysePayload = new AnalysePayload();
         myRecyclerAdapter = new MyRecyclerAdapter(this, GRID);
         mRecycler.setLayoutManager(new GridLayoutManager(getApplicationContext(), gameSize));
         mRecycler.setItemAnimator(new DefaultItemAnimator());
         mRecycler.setAdapter(myRecyclerAdapter);
         myRecyclerAdapter.setListener(this);
-        analysePayload.setSplitListener(this);
 
         if (dataSingleton.isHost()) {
             worryAboutTurns();
@@ -229,7 +228,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         dataSingleton.setMyTurn(false);
     }
 
-    @Override
+   /* @Override
     public void onSplitCompleted(GsonModel gsonModel) {
         switch (gsonModel.getPayloadId()) {
             case 2:
@@ -255,7 +254,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
             case 6:
                 break;
         }
-    }
+    }*/
 
     private String getResString(int id) {
         return getResources().getString(id);

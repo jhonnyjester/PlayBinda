@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +16,6 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Connections.AnalysePayload;
-import com.jhony.jester.play.Interfaces.SplitListener;
 import com.jhony.jester.play.Model.AllPlayers;
 import com.jhony.jester.play.Model.GsonModel;
 import com.jhony.jester.play.R;
@@ -28,7 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.JOINED;
 
-public class JoinActivity extends AppCompatActivity implements SplitListener {
+public class JoinActivity extends AppCompatActivity {
     EditText gamePass;
     CircleImageView hostsImage;
     TextView hostsName;
@@ -41,6 +41,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
     AnalysePayload analysePayload;
     DataSingleton dataSingleton;
     private int pos;
+    private static final String TAG = "JoinActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,6 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
 
         joinPayload = new JSONObject();
         connectionsClient = Nearby.getConnectionsClient(getApplicationContext());
-        analysePayload.setSplitListener(this);
 
         joinIntent = new Intent(JoinActivity.this, WaitingActivity.class);
         joinIntent.putExtra(getResString(R.string.which), JOINED);
@@ -102,9 +102,10 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
     }
 
 
-    @Override
-    public void onSplitCompleted(GsonModel gsonModel) {
+   /* @Override
+    public void onJoin(GsonModel gsonModel) {
         //show the hosts
+        Log.d(TAG, "onSplitCompleted: CAME HERE");
         if (gsonModel.getPayloadId() == 1) {
             pos = 0;
             hostsName.setText(dataSingleton.getHosts().get(pos).toString());
@@ -114,7 +115,7 @@ public class JoinActivity extends AppCompatActivity implements SplitListener {
             joinGame.setClickable(true);
             joinGame.setBackground(getResources().getDrawable(R.drawable.button_background));
         }
-    }
+    }*/
 
     private String getResString(int id) {
         return getResources().getString(id);

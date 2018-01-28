@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
@@ -16,6 +17,8 @@ import com.jhony.jester.play.Utils.DataSingleton;
  */
 
 public class MyPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private static final String TAG = "MyPreferenceFragment";
 
     Preference namePref, musicPref, rotationPref, soundPref, vibrationPref, aboutPref, feedbackPref;
     DataSingleton dataSingleton;
@@ -33,17 +36,21 @@ public class MyPreferenceFragment extends PreferenceFragment implements SharedPr
         aboutPref = findPreference("about_preference");
         feedbackPref = findPreference("feedback_preference");
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+       /* FOR INITIAL SETUP
+       -----------NOT REQUIRED NOW--------------
+
+       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String namePrefValue = preferences.getString("name_key", "Name not found");
         boolean musicPrefValue = preferences.getBoolean("music_key", false);
         boolean soundPrefValue = preferences.getBoolean("sound_key", false);
         boolean vibPrefValue = preferences.getBoolean("vib_key", false);
-        boolean rotationPrefValue = preferences.getBoolean("rotation_key", false);
+        boolean rotationPrefValue = preferences.getBoolean("rotation_key", false);*/
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference anyPreference = findPreference(key);
+        Log.d(TAG, "onSharedPreferenceChanged: " + key);
         switch (key) {
             case Constants.SP_NAME_KEY:
                 anyPreference.setSummary(sharedPreferences.getString(key, " "));

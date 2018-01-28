@@ -20,7 +20,6 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.jhony.jester.play.Interfaces.SplitListener;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
 import com.jhony.jester.play.Utils.DataSingleton;
@@ -70,8 +69,6 @@ public class EverythingNearby {
                         }
 
                     }
-
-
                     break;
                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                     Log.d("onConnectionResult", "REJECTED");
@@ -114,13 +111,14 @@ public class EverythingNearby {
             Log.d("EndPoint", "LOST");
         }
     };
-    private AnalysePayload analysePayload;private String receivedPayloadString;
+    private AnalysePayload analysePayload;
     private final PayloadCallback payloadCallback = new PayloadCallback() {
         @Override
         public void onPayloadReceived(String endPoint, Payload payload) {
             Log.d("onPayLoadReceived", "RECEIVED");
-             receivedPayloadString = new String(payload.asBytes());
+             String receivedPayloadString = new String(payload.asBytes());
             analysePayload = new AnalysePayload(endPoint, receivedPayloadString, connectionsClient);
+
 //            Log.d("Payload Received", receivedPayloadString);
 //            Toast.makeText(context, "Payload recieved: " + receivedPayloadString, Toast.LENGTH_SHORT).show();
             //  int otherPlayerClicked = Arrays.binarySearch(DataSingleton.numbers.toArray(), receivedPayloadString);

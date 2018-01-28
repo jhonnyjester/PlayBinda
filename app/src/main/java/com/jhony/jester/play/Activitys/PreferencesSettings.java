@@ -6,7 +6,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.util.Log;
 import android.view.View;
@@ -18,12 +21,13 @@ import android.widget.Toast;
 import com.jhony.jester.play.Fragments.MyPreferenceFragment;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
+import com.jhony.jester.play.Utils.DataSingleton;
 import com.jhony.jester.play.Utils.FileUtils;
 import com.jhony.jester.play.Utils.Preferences;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PreferencesSettings extends Preferences  {
+public class PreferencesSettings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener  {
 
     private static final int CAMERA_REQUEST_CODE = 789;
     private static final int GALLERY_REQUEST_CODE = 456;
@@ -34,7 +38,7 @@ public class PreferencesSettings extends Preferences  {
     BottomSheetDialog dialog;
     CircleImageView playerImage;
     Button signOut;
-
+    DataSingleton dataSingleton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +46,9 @@ public class PreferencesSettings extends Preferences  {
 
         playerImage = findViewById(R.id.user_image_sett);
         signOut = findViewById(R.id.sign_out_sett);
-
+        addPreferencesFromResource(R.xml.preferences);
         //loading settings fragment
-        getFragmentManager().beginTransaction().replace(R.id.content, new MyPreferenceFragment()).commit();
+//        getFragmentManager().beginTransaction().replace(R.id.content, new MyPreferenceFragment()).commit();
 
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +141,114 @@ public class PreferencesSettings extends Preferences  {
     }
 
 
+    public static class MyPreferenceFragment extends PreferenceFragment{
+
+        private static final String TAG = "MyPreferenceFragment";
+
+        Preference namePref, musicPref, rotationPref, soundPref, vibrationPref, aboutPref, feedbackPref;
+
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preferences);
+
+            namePref = findPreference("name_key");
+            musicPref = findPreference("music_key");
+            soundPref = findPreference("sound_key");
+            vibrationPref = findPreference("vib_key");
+            rotationPref = findPreference("rotation_key");
+            aboutPref = findPreference("about_preference");
+            feedbackPref = findPreference("feedback_preference");
+
+       /* FOR INITIAL SETUP
+       -----------NOT REQUIRED NOW--------------
+
+       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String namePrefValue = preferences.getString("name_key", "Name not found");
+        boolean musicPrefValue = preferences.getBoolean("music_key", false);
+        boolean soundPrefValue = preferences.getBoolean("sound_key", false);
+        boolean vibPrefValue = preferences.getBoolean("vib_key", false);
+        boolean rotationPrefValue = preferences.getBoolean("rotation_key", false);*/
+        }
+
+
+    }
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Preference anyPreference = findPreference(key);
+        Log.d(TAG, "onSharedPreferenceChanged: " + key);
+        switch (key) {
+            case Constants.SP_NAME_KEY:
+                anyPreference.setSummary(sharedPreferences.getString(key, " "));
+                dataSingleton.setmUserName(sharedPreferences.getString(key, dataSingleton.getmUserName()));
+                break;
+            case Constants.SP_MUSIC_KEY:
+                if (sharedPreferences.getBoolean(key, false)) {
+                    anyPreference.setSummary("Music is ON");
+                    putOn(1);
+                } else {
+                    anyPreference.setSummary("Music is OFF");
+                    putOff(1);
+                }
+                break;
+            case Constants.SP_SOUND_KEY:
+                if (sharedPreferences.getBoolean(key, false)) {
+                    anyPreference.setSummary("Sound is ON");
+                    putOn(2);
+                } else {
+                    anyPreference.setSummary("Sound is OFF");
+                    putOff(2);
+                }
+                break;
+            case Constants.SP_VIB_KEY:
+                if (sharedPreferences.getBoolean(key, false)) {
+                    anyPreference.setSummary("Vibration is ON");
+                    putOn(3);
+                } else {
+                    anyPreference.setSummary("Vibration is OFF");
+                    putOff(3);
+                }
+                break;
+            case Constants.SP_ROTATION_KEY:
+                if (sharedPreferences.getBoolean(key, false)) {
+                    anyPreference.setSummary("Rotation is ON");
+                    putOn(4);
+                } else {
+                    anyPreference.setSummary("Rotation is OFF");
+                    putOff(4);
+                }
+                break;
+        }
+    }
+
+    private void putOn(int whichSwitch) {
+        switch (whichSwitch) {
+            case 1: //switch on the music
+                break;
+            case 2://switch on the sound
+                break;
+            case 3://switch on the vibration
+                break;
+            case 4://switch rotation
+                break;
+        }
+    }
+
+    private void putOff(int whichSwitch) {
+        switch (whichSwitch) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+    }
 
 }
 

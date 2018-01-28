@@ -1,8 +1,6 @@
 package com.jhony.jester.play.Activitys;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.jhony.jester.play.Connections.EverythingNearby;
 import com.jhony.jester.play.Model.AllPlayers;
+import com.jhony.jester.play.Model.GsonModel;
 import com.jhony.jester.play.Model.PlayerInfo;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
