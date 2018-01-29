@@ -15,6 +15,7 @@ import com.google.android.gms.nearby.connection.Payload;
 import com.jhony.jester.play.Adapters.MyRecyclerAdapter;
 import com.jhony.jester.play.Connections.AnalysePayload;
 import com.jhony.jester.play.Interfaces.BindaItemClickListener;
+import com.jhony.jester.play.Interfaces.OnAnalysePayloadListener;
 import com.jhony.jester.play.Model.GsonModel;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.DataSingleton;
@@ -28,7 +29,7 @@ import java.util.Collections;
 import static com.jhony.jester.play.Utils.Constants.GRID;
 
 
-public class GameActivity extends AppCompatActivity implements BindaItemClickListener {
+public class GameActivity extends AppCompatActivity implements BindaItemClickListener, OnAnalysePayloadListener {
 
     TextView
             number,
@@ -228,8 +229,8 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
         dataSingleton.setMyTurn(false);
     }
 
-   /* @Override
-    public void onSplitCompleted(GsonModel gsonModel) {
+ @Override
+    public void OnAnalysePayload(GsonModel gsonModel) {
         switch (gsonModel.getPayloadId()) {
             case 2:
                 number.setText(dataSingleton.getCurrentNumber());
@@ -254,7 +255,7 @@ public class GameActivity extends AppCompatActivity implements BindaItemClickLis
             case 6:
                 break;
         }
-    }*/
+    }
 
     private String getResString(int id) {
         return getResources().getString(id);

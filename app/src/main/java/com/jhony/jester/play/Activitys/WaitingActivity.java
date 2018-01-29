@@ -127,7 +127,7 @@ public class WaitingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 switch (getIntent().getIntExtra(getResString(R.string.which), 0)) {
                     case HOST:
-                        //check if all are ready and then proceed
+                        //todo check if all are ready and then proceed
                         startActivity(new Intent(WaitingActivity.this, GameActivity.class));
                         break;
                     case JOINED:

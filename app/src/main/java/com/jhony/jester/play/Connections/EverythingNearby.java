@@ -20,6 +20,7 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.jhony.jester.play.Interfaces.OnAnalysePayloadListener;
 import com.jhony.jester.play.R;
 import com.jhony.jester.play.Utils.Constants;
 import com.jhony.jester.play.Utils.DataSingleton;
@@ -36,6 +37,7 @@ public class EverythingNearby {
     private int which;
     private Context context;
     private ConnectionsClient connectionsClient;
+    OnAnalysePayloadListener joinListener;
     private DataSingleton dataSingleton;
 
     private final ConnectionLifecycleCallback connectionLifecycleCallback = new ConnectionLifecycleCallback() {
@@ -117,7 +119,7 @@ public class EverythingNearby {
         public void onPayloadReceived(String endPoint, Payload payload) {
             Log.d("onPayLoadReceived", "RECEIVED");
              String receivedPayloadString = new String(payload.asBytes());
-            analysePayload = new AnalysePayload(endPoint, receivedPayloadString, connectionsClient);
+            analysePayload = new AnalysePayload(endPoint, receivedPayloadString, connectionsClient, joinListener);
 
 //            Log.d("Payload Received", receivedPayloadString);
 //            Toast.makeText(context, "Payload recieved: " + receivedPayloadString, Toast.LENGTH_SHORT).show();
@@ -136,6 +138,22 @@ public class EverythingNearby {
         this.context = context;
         this.connectionsClient = Nearby.getConnectionsClient(context);
         this.which = which;
+        dataSingleton = DataSingleton.getOneInstance();
+        switch (which) {
+            case Constants.HOST:
+                startAdvertising();
+                break;
+            case Constants.JOIN:
+                startDiscovery();
+                break;
+        }
+    }
+
+    public EverythingNearby(Context context, int which, OnAnalysePayloadListener onJoinCallback) {
+        this.context = context;
+        this.connectionsClient = Nearby.getConnectionsClient(context);
+        this.which = which;
+        this.joinListener = onJoinCallback;
         dataSingleton = DataSingleton.getOneInstance();
         switch (which) {
             case Constants.HOST:

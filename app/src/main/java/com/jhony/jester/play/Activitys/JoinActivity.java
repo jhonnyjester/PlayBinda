@@ -15,10 +15,12 @@ import android.widget.Toast;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.Payload;
-import com.jhony.jester.play.Connections.AnalysePayload;
+import com.jhony.jester.play.Connections.EverythingNearby;
+import com.jhony.jester.play.Interfaces.OnAnalysePayloadListener;
 import com.jhony.jester.play.Model.AllPlayers;
 import com.jhony.jester.play.Model.GsonModel;
 import com.jhony.jester.play.R;
+import com.jhony.jester.play.Utils.Constants;
 import com.jhony.jester.play.Utils.DataSingleton;
 
 import org.json.JSONException;
@@ -28,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.jhony.jester.play.Utils.Constants.JOINED;
 
-public class JoinActivity extends AppCompatActivity {
+public class JoinActivity extends AppCompatActivity implements OnAnalysePayloadListener {
     EditText gamePass;
     CircleImageView hostsImage;
     TextView hostsName;
@@ -38,7 +40,7 @@ public class JoinActivity extends AppCompatActivity {
     Intent joinIntent;
     JSONObject joinPayload;
     ConnectionsClient connectionsClient;
-    AnalysePayload analysePayload;
+    EverythingNearby everythingNearby;
     DataSingleton dataSingleton;
     private int pos;
     private static final String TAG = "JoinActivity";
@@ -47,6 +49,8 @@ public class JoinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.joining_layout);
+
+        everythingNearby = new EverythingNearby(getApplicationContext(), Constants.JOIN, this);
 
         dataSingleton = DataSingleton.getOneInstance();
 
@@ -102,8 +106,8 @@ public class JoinActivity extends AppCompatActivity {
     }
 
 
-   /* @Override
-    public void onJoin(GsonModel gsonModel) {
+   @Override
+    public void OnAnalysePayload(GsonModel gsonModel) {
         //show the hosts
         Log.d(TAG, "onSplitCompleted: CAME HERE");
         if (gsonModel.getPayloadId() == 1) {
@@ -115,7 +119,7 @@ public class JoinActivity extends AppCompatActivity {
             joinGame.setClickable(true);
             joinGame.setBackground(getResources().getDrawable(R.drawable.button_background));
         }
-    }*/
+    }
 
     private String getResString(int id) {
         return getResources().getString(id);

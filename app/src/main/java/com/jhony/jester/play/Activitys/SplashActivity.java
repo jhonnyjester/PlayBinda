@@ -99,7 +99,6 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dataSingleton.setHost(false);
-                everythingNearby = new EverythingNearby(getApplicationContext(), Constants.JOIN);
                 startActivity(new Intent(SplashActivity.this, JoinActivity.class));
             }
         });
